@@ -1024,7 +1024,7 @@ form.card-form {
   border: 0;
   background-color: transparent; }
   
-.tag-no-value {
+.tag-no-entity {
   border: 1px solid #dadada;
   background-color: transparent; }
 
@@ -1054,10 +1054,10 @@ form.card-form {
   border-bottom-right-radius: 3px;
   font-size: 12px; }
   
-.tag-list-keys {
+.tag-list-categories {
   left: 10px; }
   
-.tag-list-values {
+.tag-list-entities {
   left: 50%; }
 
 .tag-list-item {

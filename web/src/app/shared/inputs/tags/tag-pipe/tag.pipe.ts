@@ -4,17 +4,17 @@ import * as $                           from 'jquery';
 
 @Pipe({name: 'tagPipe'})
 export class TagPipe implements PipeTransform {
-  transform(keys: any, str: string): any {
+  transform(categories: any, str: string): any {
     if (str && str.length > 0) {
       str = str.toLowerCase().trim();
       
       // Tag values filter
-      if (Array.isArray(keys)) {
-        keys = _.filter(keys, (key: any) => { 
+      if (Array.isArray(categories)) {
+        categories = _.filter(categories, (category: any) => { 
           let result = false;
           let isMatch = false;
           let isAllWordMatch = true;
-          let words = key.name.split(' ');
+          let words = category.name.split(' ');
           let strs = str.split(' ');
           
           // Multiple word support
@@ -35,26 +35,26 @@ export class TagPipe implements PipeTransform {
             
           // Single word support
           } else {
-            result = key.name.toLowerCase().indexOf(str) === 0;
+            result = category.name.toLowerCase().indexOf(str) === 0;
           }
           return result;
         });
         
-      // Tag keys filter
+      // Tag categories filter
       } else {
-        keys = _.filter(keys, (key: any) => { 
-          return key.key.toLowerCase().includes(str); 
+        categories = _.filter(categories, (category: any) => { 
+          return category.category.toLowerCase().includes(str); 
         });
       }
     // if str is empty
-    } else if (!Array.isArray(keys)) {
+    } else if (!Array.isArray(categories)) {
       let array = [];
-      for (let key in keys) {
-        array.push({key: key, value: keys[key]});
+      for (let category in categories) {
+        array.push({category: category, name: categories[category].name, entityId: categories[category].entityId });
       } 
-      keys = array;
+      categories = array;
     }
     
-    return keys;
+    return categories;
   }
 }

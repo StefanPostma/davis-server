@@ -1,52 +1,52 @@
 <form #form="ngForm" style="min-height: 0;">
-  <span class="tag" [class.tag-empty]="!tag.key || tag.key === ''" [class.tag-no-value]="tag.key !== '' && tag.value.name === ''" style="overflow: visible" (click)="focusInput()">
-    <button *ngIf="(tag.value.name === '' && tag.key !== '') || (valueFocused && tag.value.name === '')" class="tag__delete" tabindex="-1" (click)="clearKey(); focusKeyInput()"></button>
+  <span class="tag" [class.tag-empty]="!tag.category || tag.category === ''" [class.tag-no-entity]="tag.category !== '' && tag.name === ''" style="overflow: visible" (click)="focusInput()">
+    <button *ngIf="(tag.name === '' && tag.category !== '') || (entityFocused && tag.name === '')" class="tag__delete" tabindex="-1" (click)="clearCategory(); focusCategoryInput()"></button>
     <span class="tag__key">
-      <input #keyInput [(ngModel)]="tag.key" name="key" type="text" autocomplete="off" spellcheck="false"
-        class="tag-input tag-input-key tag__key"
+      <input #categoryInput [(ngModel)]="tag.category" name="category" type="text" autocomplete="off" spellcheck="false"
+        class="tag-input tag-input-category tag__key"
         style="font-weight: inherit; font-family: inherit; background: none; border: 0; outline: 0; min-width: 20px;"
-        [hidden]="keys[tag.key] && !keyFocused"
-        [style.width.px]="keySpan.offsetWidth + 8"
-        (keyup)="keyInputGeneralKeyUp($event)"
-        (keyup.enter)="keyInputSpecialKeyUp($event)"
-        (keyup.arrowUp)="keyInputSpecialKeyUp($event)"
-        (keyup.arrowDown)="keyInputSpecialKeyUp($event)"
+        [hidden]="categories[tag.category] && !categoryFocused"
+        [style.width.px]="categorySpan.offsetWidth + 8"
+        (keyup)="categoryInputGeneralKeyUp($event)"
+        (keyup.enter)="categoryInputSpecialKeyUp($event)"
+        (keyup.arrowUp)="categoryInputSpecialKeyUp($event)"
+        (keyup.arrowDown)="categoryInputSpecialKeyUp($event)"
         (click)="preventParentClick($event)"
-        (focus)="keyFocused = true"
-        (blur)="keyFocused = false; focus = false; (keys[tag.key]) ? null : tag.key = ''; deleteEmptyTags.emit()">
-      <span #keySpan class="tag-span" [class.position-off-screen]="keyFocused" (click)="preventParentClick($event); focusKeyInput()">{{ tag.key }}{{ (tag.key && tag.key.length > 0) ? ':' : null }}</span>
-      <div *ngIf="keyFocused && !keys[tag.key]" class="tag-list tag-list-keys">
-        <div #keysList *ngFor="let key of keys | tagPipe:tag.key" class="tag-list-item" [class.tag-list-item-highlighted]="highlighted.key === key.key || (keys | tagPipe:tag.key).length === 1" 
-          (mousedown)="focusValueInput(key)">
-          {{ key.key }}
+        (focus)="categoryFocused = true"
+        (blur)="categoryFocused = false; focus = false; (categories[tag.category]) ? null : tag.category = ''; deleteEmptyTags.emit()">
+      <span #categorySpan class="tag-span" [class.position-off-screen]="categoryFocused" (click)="preventParentClick($event); focusCategoryInput()">{{ tag.category }}{{ (tag.category && tag.category.length > 0) ? ':' : null }}</span>
+      <div *ngIf="categoryFocused && !categories[tag.category]" class="tag-list tag-list-categories">
+        <div #categoriesList *ngFor="let category of categories | tagPipe:tag.category" class="tag-list-item" [class.tag-list-item-highlighted]="highlighted.category === category.category || (categories | tagPipe:tag.category).length === 1" 
+          (mousedown)="focusEntityInput(category)">
+          {{ category.category }}
         </div>
       </div>
     </span>
-    <span [hidden]="!keys[tag.key]" class="tag__value">
-      <input #valueInput [(ngModel)]="tag.value.name" name="value" type="text" autocomplete="off" spellcheck="false"
-        class="tag-input tag-input-value tag__value" 
+    <span [hidden]="!categories[tag.category]" class="tag__value">
+      <input #entityInput [(ngModel)]="tag.name" name="entity" type="text" autocomplete="off" spellcheck="false"
+        class="tag-input tag-input-entity tag__value" 
         style="font-weight: inherit; font-family: inherit; background: none; border: 0; outline: 0; min-width: 20px;"
-        [style.width.px]="valueSpan.offsetWidth + 8"
-        [hidden]="!values || !valueFocused"
-        (keydown.enter)="valueInputSpecialKeyUp($event)"
-        (keyup.arrowUp)="valueInputSpecialKeyUp($event)"
-        (keyup.arrowDown)="valueInputSpecialKeyUp($event)"
+        [style.width.px]="entitySpan.offsetWidth + 8"
+        [hidden]="!entities || !entityFocused"
+        (keydown.enter)="entityInputSpecialKeyUp($event)"
+        (keyup.arrowUp)="entityInputSpecialKeyUp($event)"
+        (keyup.arrowDown)="entityInputSpecialKeyUp($event)"
         (click)="preventParentClick($event)"
-        (focus)="valueFocused = true"
-        (blur)="valueFocused = false; focus = false; (includes(values, testValue)) ? null : tag.value = { name: '', entityId: '' }; deleteEmptyTags.emit();">
-      <span #valueSpan class="tag-span" 
-        [class.position-off-screen]="valueFocused || !values || values.length < 1" 
-          (click)="preventParentClick($event); focusValueInput(null)">
-          {{ tag.value.name }}{{ (includesDuplicateNames(values, tag.value.name)) ? ' (' + tag.value.entityId + ')' : null }}
+        (focus)="entityFocused = true"
+        (blur)="entityFocused = false; focus = false; (includes(entities, testEntity)) ? null : tag.name = ''; tag.entityId = ''; deleteEmptyTags.emit();">
+      <span #entitySpan class="tag-span" 
+        [class.position-off-screen]="entityFocused || !entities || entities.length < 1" 
+          (click)="preventParentClick($event); focusEntityInput(null)">
+          {{ tag.name }}{{ (includesDuplicateNames(entities, tag.name)) ? ' (' + tag.entityId + ')' : null }}
       </span>
-      <div *ngIf="valueFocused && keys[tag.key] && ((values | tagPipe:tag.value.name).length > 1 || (valueFocused && (values | tagPipe:tag.value.name).length === 1 && (values | tagPipe:tag.value.name)[0] !== tag.value))" 
-        class="tag-list tag-list-values">
-        <div #valuesList *ngFor="let value of values | tagPipe:tag.value.name" class="tag-list-item" [title]="value.name + ' (' + value.entityId + ')'" [class.tag-list-item-highlighted]="highlighted.value === value" 
-          (mousedown)="tag.value.name = value.name; tag.value.entityId = value.entityId; testValue = value;">
-          {{ value.name }}{{ (includesDuplicateNames(values, value.name)) ? ' (' + value.entityId + ')' : null }}
+      <div *ngIf="entityFocused && categories[tag.category] && ((entities | tagPipe:tag.name).length > 1 || (entityFocused && (entities | tagPipe:tag.name).length === 1 && (entities | tagPipe:tag.name)[0] !== tag.entity))" 
+        class="tag-list tag-list-entities">
+        <div #entitiesList *ngFor="let entity of entities | tagPipe:tag.name" class="tag-list-item" [title]="name + ' (' + entity.entityId + ')'" [class.tag-list-item-highlighted]="highlighted.entity === entity" 
+          (mousedown)="tag.name = entity.name; tag.entityId = entity.entityId; testEntity = entity;">
+          {{ entity.name }}{{ (includesDuplicateNames(entities, entity.name)) ? ' (' + entity.entityId + ')' : null }}
         </div>
       </div>
     </span>
-    <button *ngIf="tag.key && tag.key !== '' && tag.value && tag.value.name !== ''" class="tag__delete" tabindex="-1" (mousedown)="tag.value = { name: '', entityId: '' }; focusValueInput();"></button>
+    <button *ngIf="tag.category && tag.category !== '' && tag.entity && tag.name !== ''" class="tag__delete" tabindex="-1" (mousedown)="tag.name= ''; tag.entityId= ''; focusEntityInput();"></button>
   </span>
 </form>

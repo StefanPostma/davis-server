@@ -15,14 +15,14 @@ export class TagsInputComponent implements OnInit, AfterViewInit {
   
   @Input() tags: any;
 
-  keys: any = {
-    'Application': {
-      key: 'Application',
-      values: [],
+  categories: any = {
+    'applications': {
+      category: 'applications',
+      entities: [],
     },
-    'Service': {
-      key: 'Service',
-      values: [],
+    'services': {
+      category: 'services',
+      entities: [],
     },
   };
   focus: Array<boolean> = [];
@@ -33,8 +33,8 @@ export class TagsInputComponent implements OnInit, AfterViewInit {
     
   addTag() {
     let obj = this.tags[this.tags.length - 1];
-    if (obj.key && obj.key.length > 0 && obj.value && obj.value.name.length > 0) {
-      this.tags.push({ key: null, value: { name: null, entityId: null } });
+    if (obj.category && obj.category.length > 0 && obj.name && obj.name.length > 0) {
+      this.tags.push({ category: null, name: null, entityId: null });
       this.focus.push(true);
     } else {
       this.focus[this.focus.length - 1] = false;
@@ -47,7 +47,7 @@ export class TagsInputComponent implements OnInit, AfterViewInit {
   deleteEmptyTags() {
     let index = this.tags.length;
     while (index--) {
-      if (this.tags[index].key.length < 1 && index < this.tags.length && this.tags.length > 1) {
+      if (this.tags[index].category.length < 1 && index < this.tags.length && this.tags.length > 1) {
         this.tags.splice(index, 1);
         this.focus.splice(index, 1);
       }
@@ -62,7 +62,7 @@ export class TagsInputComponent implements OnInit, AfterViewInit {
     this.tags.forEach((tag: any) => {
       this.focus.push(false);
     });
-    this.tags.push({ key: null, value: { name: null, entityId: null } });
+    this.tags.push({ category: null, name: null, entityId: null });
     this.focus.push(false);
     
     this.iConfig.getDynatraceApplications()
@@ -70,7 +70,7 @@ export class TagsInputComponent implements OnInit, AfterViewInit {
         if (!response.success) throw new Error(response.message);
         
         response.applications.forEach((application: any) => {
-          this.keys['Application'].values.push({ name: application.name, entityId: application.entityId });
+          this.categories['applications'].entities.push({ name: application.name, entityId: application.entityId });
         });
         return this.iConfig.getDynatraceServices();
       })
@@ -78,7 +78,7 @@ export class TagsInputComponent implements OnInit, AfterViewInit {
         if (!response.success) throw new Error(response.message);
         
         response.services.forEach((service: any) => {
-         this.keys['Service'].values.push({ name: service.name, entityId: service.entityId });
+         this.categories['services'].entities.push({ name: service.name, entityId: service.entityId });
         });
       })
       .catch(err => {
