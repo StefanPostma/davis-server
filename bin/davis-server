@@ -16,7 +16,6 @@ process.noDeprecation = true;
 
   const davis = new Davis({
     logLevel: 'debug',
-    userPlugins: ['./weather'],
   });
 
   return davis.run();
