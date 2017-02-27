@@ -1,5 +1,0 @@
-The weather in {{ weather.display_location.city }} is currently {{ weather.weather }} with a
-temperature of {{ weather.temp_f}} degrees, and a {{ weather.wind_string }} wind out of
-the {{ weather.wind_dir }}.
-
-
