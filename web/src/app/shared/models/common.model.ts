@@ -36,6 +36,13 @@ export class CommonModel {
     token: '',
     strictSSL: true,
   };
+
+  ymonitor: any = {
+        url: '',
+        apiUrl: '',
+        token: '',
+        strictSSL: true,
+      };
   
   notifications: any = {
     uri: '',

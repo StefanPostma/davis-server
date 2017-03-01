@@ -18,6 +18,7 @@ export class DavisModel {
       users: [],
       filter: new CommonModel().filter,
       dynatrace: new CommonModel().dynatrace,
+      ymonitor: new CommonModel().ymonitor,
       notifications: new CommonModel().notifications,
       slack: new CommonModel().slack,
       channels: [],
