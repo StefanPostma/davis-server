@@ -32,6 +32,7 @@ export class DavisService {
     '/configuration#notification-source': 'Account settings',
     '/configuration#slack': 'Account settings',
     '/configuration#chrome': 'Account settings',
+    '/configuration#ymonitor': 'Account settings',
   };
   
   values: any = new DavisModel().davis.values;
