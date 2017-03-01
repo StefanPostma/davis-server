@@ -16,7 +16,7 @@ import { FormsModule }                            from "@angular/forms";
 import { ConfigAlexaComponent }                   from "./config-alexa/config-alexa.component";
 import { ConfigChromeComponent }                  from "./config-chrome/config-chrome.component";
 import { ConfigDynatraceComponent }               from "./config-dynatrace/config-dynatrace.component";
-import { ConfigYmonitorComponent }               from "./config-ymonitor/config-ymonitor.component";
+import { ConfigYmonitorComponent }                from "./config-ymonitor/config-ymonitor.component";
 import { ConfigFilterComponent }                  from "./config-filter/config-filter.component";
 import { ConfigFiltersComponent }                 from "./config-filters/config-filters.component";
 import { ConfigNotificationFiltersComponent }     from "./config-notification-filters/config-notification-filters.component";
