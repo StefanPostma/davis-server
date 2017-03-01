@@ -177,10 +177,17 @@ export class ConfigurationBaseComponent implements OnInit {
         this.iConfig.values.notifications.config = response.config;
         return this.iConfig.getDynatrace();
       })
+      
       .then(response => {
         if (!response.success) throw new Error(response.message);
         this.iConfig.values.dynatrace = response.dynatrace;
         this.iConfig.values.original.dynatrace = _.cloneDeep(this.iConfig.values.dynatrace);
+        return this.iConfig.getYmonitor();
+      })
+      .then(response => {
+        if (!response.success) throw new Error(response.message);
+        this.iConfig.values.ymonitor = response.ymonitor;
+        this.iConfig.values.original.ymonitor = _.cloneDeep(this.iConfig.values.ymonitor);
         return this.iConfig.getSlack();
       })
       .then(response => {
