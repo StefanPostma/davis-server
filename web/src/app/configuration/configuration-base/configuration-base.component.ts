@@ -70,16 +70,16 @@ export class ConfigurationBaseComponent implements OnInit {
       name: 'Slack App',
       admin: true,
     },
-   // ymonitor: {
-   //     key: 'ymonitor',
-  //      name: 'Ymonitor',
-   //     admin: true,
-   //   },
     chrome: {
       key: 'chrome',
       name: 'Chrome Extension',
       admin: false,
     },
+    ymonitor: {
+        key: 'ymonitor',
+        name: 'Ymonitor',
+        admin: true,
+      },
   };
   
   expandedSection: string = '';
