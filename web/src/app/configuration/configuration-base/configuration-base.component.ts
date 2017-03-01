@@ -65,6 +65,11 @@ export class ConfigurationBaseComponent implements OnInit {
       name: 'Dynatrace',
       admin: true,
     },
+    ymonitor: {
+        key: 'ymonitor',
+        name: 'Ymonitor',
+        admin: true,
+      },
     slack: {
       key: 'slack',
       name: 'Slack App',
@@ -75,11 +80,6 @@ export class ConfigurationBaseComponent implements OnInit {
       name: 'Chrome Extension',
       admin: false,
     },
-    ymonitor: {
-        key: 'ymonitor',
-        name: 'Ymonitor',
-        admin: true,
-      },
   };
   
   expandedSection: string = '';

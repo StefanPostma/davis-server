@@ -36,6 +36,7 @@ export class DavisModel {
       filter: new CommonModel().status,
       filters: new CommonModel().status,
       dynatrace: new CommonModel().status,
+      ymonitor: new CommonModel().status,
       alexa: new CommonModel().status,
       slack: new CommonModel().status,
     },
