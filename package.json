@@ -1,6 +1,6 @@
 {
   "name": "@dynatrace/davis",
-  "version": "0.10.b",
+  "version": "0.10.0",
   "description": "Davis Server",
   "main": "./lib/Davis.js",
   "license": "MIT",

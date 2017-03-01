@@ -124,6 +124,8 @@ export class ConfigurationBaseComponent implements OnInit {
     this.iConfig.status['dynatrace'].error = null;
     this.iConfig.status['slack'].success = null;
     this.iConfig.status['slack'].error = null;
+    this.iConfig.status['ymonitor'].success = null;
+    this.iConfig.status['ymonitor'].error = null;
   
     this.iConfig.helpLinkText = 'Help for these settings';  
   
