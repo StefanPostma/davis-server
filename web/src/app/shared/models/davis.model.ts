@@ -27,6 +27,7 @@ export class DavisModel {
         otherUser: new CommonModel().user,
         filter: new CommonModel().filter,
         dynatrace: new CommonModel().dynatrace,
+        ymonitor: new CommonModel().ymonitor,
         slack: new CommonModel().slack,
       },
     },
