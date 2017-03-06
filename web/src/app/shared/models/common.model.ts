@@ -41,6 +41,8 @@ export class CommonModel {
         url: '',
         apiUrl: '',
         token: '',
+        username: '',
+        password: '',
         strictSSL: true,
       };
   

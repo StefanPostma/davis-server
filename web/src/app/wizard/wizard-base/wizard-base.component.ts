@@ -40,6 +40,8 @@ export class WizardBaseComponent implements OnInit {
         }
         this.iConfig.values.dynatrace.url = response.config.dynatrace.url;
         this.iConfig.values.dynatrace.token = response.config.dynatrace.token;
+        this.iConfig.values.ymonitor.url = response.config.ymonitor.url;
+        this.iConfig.values.ymonitor.token = response.config.ymonitor.token;
         this.iConfig.values.slack.clientId = response.config.slack.clientId;
         this.iConfig.values.slack.clientSecret = response.config.slack.clientSecret;
         this.iConfig.values.slack.redirectUri = response.config.slack.redirectUri;
