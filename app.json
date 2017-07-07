@@ -1,0 +1,9 @@
+{
+  "name": "Davis by Dynatrace",
+  "description": "An extensible implementation for natural language access to the Dynatrace platform artificial intelligence layer.",
+  "repository": "https://github.com/Dynatrace/davis-server",
+  "success_url": "/wizard",
+  "keywords": ["davis", "dynatrace", "bot"],
+  "image": "heroku/nodejs",
+  "addons": ["mongolab"]
+}
