@@ -21,7 +21,7 @@ describe('ResponseBuilder', () => {
     const p1 = e1.start('what happened yesterday with testapp', 'alexa', 'test')
       .then(e => {
         e.response({
-          text: 'test response.',
+          text: 'Test response.',
         }).end();
         e.model.request.analysed = {};
         e.model.request.analysed.timeRange = null;
@@ -31,7 +31,7 @@ describe('ResponseBuilder', () => {
     const p2 = e2.start('what happened yesterday with testapp', 'alexa', 'test')
       .then(e => {
         e.response({
-          say: 'test response.',
+          say: 'Test response.',
         }).end();
         e.model.request.analysed = {};
         e.model.request.analysed.timeRange = null;
@@ -42,7 +42,7 @@ describe('ResponseBuilder', () => {
       .then(e => {
         e.response({
           show: {
-            text: 'test response.',
+            text: 'Test response.',
             attachments: [],
           },
         }).end();
@@ -54,18 +54,18 @@ describe('ResponseBuilder', () => {
     return BbPromise.all([p1, p2, p3])
       .spread((r1, r2, r3) => {
         const r = {
-          text: 'test response.',
-          say: 'test response.',
+          text: 'Test response.',
+          say: 'Test response.',
           show: {
             attachments: [
               {
-                fallback: 'test response.',
+                fallback: 'Test response.',
                 mrkdwn_in: [
                   'text',
                   'pretext',
                   'fields',
                 ],
-                text: 'test response.',
+                text: 'Test response.',
               }
             ],
           },
@@ -90,7 +90,7 @@ describe('ResponseBuilder', () => {
         e.model.request.analysed = {};
         e.model.request.analysed.timeRange = null;
         e.response({
-          textString: 'test {{variable}}.',
+          textString: 'Test {{variable}}.',
         }).end();
 
         return davis.pluginManager.responseBuilder.build(e);
@@ -102,7 +102,7 @@ describe('ResponseBuilder', () => {
           variable: "response",
         });
         e.response({
-          sayString: 'test {{variable}}.',
+          sayString: 'Test {{variable}}.',
         }).end();
         e.model.request.analysed = {};
         e.model.request.analysed.timeRange = null;
@@ -115,7 +115,7 @@ describe('ResponseBuilder', () => {
           variable: "response",
         });
         e.response({
-          showString: '{"text": "test {{variable}}."}',
+          showString: '{"text": "Test {{variable}}."}',
         }).end();
         e.model.request.analysed = {};
         e.model.request.analysed.timeRange = null;
@@ -125,18 +125,18 @@ describe('ResponseBuilder', () => {
     return BbPromise.all([p1, p2, p3])
       .spread((r1, r2, r3) => {
         const r = {
-          text: 'test response.',
-          say: 'test response.',
+          text: 'Test response.',
+          say: 'Test response.',
           show: {
             attachments: [
               {
-                fallback: 'test response.',
+                fallback: 'Test response.',
                 mrkdwn_in: [
                   'text',
                   'pretext',
                   'fields',
                 ],
-                text: 'test response.',
+                text: 'Test response.',
               }
             ],
           },
@@ -155,7 +155,7 @@ describe('ResponseBuilder', () => {
     const p1 = e1.start('what happened yesterday with testapp', 'alexa', 'test')
       .then(e => {
         e.response({
-          text: 'test response.',
+          text: 'Test response.',
         }).followUp('Who am I?');
         e.model.request.analysed = {};
         e.model.request.analysed.timeRange = null;
@@ -165,7 +165,7 @@ describe('ResponseBuilder', () => {
     const p2 = e2.start('what happened yesterday with testapp', 'alexa', 'test')
       .then(e => {
         e.response({
-          say: 'test response.',
+          say: 'Test response.',
         }).followUp('Who am I?');
         e.model.request.analysed = {};
         e.model.request.analysed.timeRange = null;
@@ -176,7 +176,7 @@ describe('ResponseBuilder', () => {
       .then(e => {
         e.response({
           show: {
-            text: 'test response.',
+            text: 'Test response.',
             attachments: [],
           },
         }).followUp('Who am I?');
@@ -188,18 +188,18 @@ describe('ResponseBuilder', () => {
     return BbPromise.all([p1, p2, p3])
       .spread((r1, r2, r3) => {
         const r = {
-          text: 'test response.  Who am I?',
-          say: 'test response.  Who am I?',
+          text: 'Test response.  Who am I?',
+          say: 'Test response.  Who am I?',
           show: {
             attachments: [
               {
-                fallback: 'test response.  Who am I?',
+                fallback: 'Test response.  Who am I?',
                 mrkdwn_in: [
                   'text',
                   'pretext',
                   'fields',
                 ],
-                text: 'test response.  Who am I?',
+                text: 'Test response.  Who am I?',
               }
             ],
           },

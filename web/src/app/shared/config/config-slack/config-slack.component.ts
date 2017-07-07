@@ -115,5 +115,21 @@ export class ConfigSlackComponent implements OnInit, AfterViewInit {
       }, 1000);
     }
     new Clipboard('.clipboard');
+    
+    if (!this.iConfig.isWizard) {
+      this.iConfig.getSlack()
+        .then(response => {
+          if (!response.success) throw new Error(response.message);
+          this.iConfig.values.slack = response.slack;
+          this.iConfig.values.slack.enabled = true;
+          if (this.iConfig.values.slack.redirectUri.length < 1) {
+            this.iConfig.values.slack.redirectUri = `${window.location.protocol}//${window.location.host}/oauth`;
+          }
+          this.iConfig.values.original.slack = _.cloneDeep(this.iConfig.values.slack);
+        })
+        .catch(err => {
+          this.iConfig.displayError(err, null);
+        });
+    }
   }
 }

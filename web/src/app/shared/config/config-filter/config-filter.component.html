@@ -21,7 +21,7 @@
             <label for="first" class="label">
               Name
             </label>
-            <input #name type="text" name="name"
+            <input #name type="text" name="name" autocomplete="off"
               class="inputfield" id="name"
               [(ngModel)]="iConfig.values.filter.name" 
               [attr.disabled]="(!iDavis.isAdmin) ? true : null"
@@ -31,12 +31,12 @@
         <div class="layout__container layout--half">
           <div class="island island--half island--half--right">
             <div style="text-align: center; margin-top: 30px;">
-              <input type="checkbox" class="checkbox" id="enabled" name="enabled"
+              <input type="checkbox" class="checkbox" id="enabled" name="enabled" autocomplete="off"
                 [(ngModel)]="iConfig.values.filter.enabled"
                 [attr.disabled]="(!iDavis.isAdmin) ? true : null"
                 (change)="validate()" />
               <label for="enabled" class="checkbox__label">
-                <span class="checkbox__caption">Filter Enabled</span>
+                <span class="checkbox__caption">{{ filterOrRule }} Enabled</span>
               </label>
             </div>
         </div>
@@ -113,30 +113,22 @@
           </div>
         </div>
       </div>
-      <div class="layout is-flex has-islands island--half">
-        <div class="layout__container layout--half">
-          <div class="island island--half island--half--left">
-            <div class="checkbox--section-title">
-              Status
-            </div>
-            <div *ngFor="let status of filterOptions.status; let i = index; let l = last;" [class.checkbox--row]="!l">
-              <input type="checkbox" class="checkbox" id="{{ status.text }}" name="{{ status.text }}"
-                [(ngModel)]="filterOptions.status[i].enabled"
-                [attr.disabled]="(!iDavis.isAdmin) ? true : null"
-                (change)="validate()" />
-              <label for="{{ status.text }}" class="checkbox__label">
-                <span class="checkbox__caption">{{ status.text }}</span>
-              </label>
-            </div>
-          </div>
+      <div class="island--full-width island--full-width-sidebar">
+        <div class="island island--center island--left">
+          <label for="source" class="label">
+            Entities
+          </label>
+          <tags-input [tags]="iConfig.values.filter.entityTags" (tagsChange)="validate()"></tags-input>
         </div>
-        <div class="layout__container layout--half">
-          <div class="island island--half island--half--right">
+      </div>
+      <div class="layout is-flex has-islands island--half">
+        <div class="layout__container layout--third">
+          <div class="island island--half island--half--left">
             <div class="checkbox--section-title">
               Impact
             </div>
             <div *ngFor="let impact of filterOptions.impact; let i = index; let l = last;" [class.checkbox--row]="!l">
-              <input type="checkbox" class="checkbox" id="{{ impact.text }}" name="{{ impact.text }}" 
+              <input type="checkbox" class="checkbox" id="{{ impact.text }}" name="{{ impact.text }}" autocomplete="off"
                 [(ngModel)]="filterOptions.impact[i].enabled"
                 [attr.disabled]="(!iDavis.isAdmin) ? true : null"
                 (change)="validate()" />
@@ -146,15 +138,13 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="layout is-flex has-islands island--half">
-        <div class="layout__container layout--half">
-          <div class="island island--half island--half--left">
+        <div class="layout__container layout--third">
+          <div class="island island--half island--half--right">
             <div class="checkbox--section-title">
               Severity Level
             </div>
             <div *ngFor="let severityLevel of filterOptions.severityLevel; let i = index; let l = last;" [class.checkbox--row]="!l">
-              <input type="checkbox" class="checkbox" id="{{ severityLevel.text }}" name="{{ severityLevel.text }}"
+              <input type="checkbox" class="checkbox" id="{{ severityLevel.text }}" name="{{ severityLevel.text }}" autocomplete="off"
                 [(ngModel)]="filterOptions.severityLevel[i].enabled"
                 [attr.disabled]="(!iDavis.isAdmin) ? true : null"
                 (change)="validate()" />
@@ -164,16 +154,28 @@
             </div>
           </div>
         </div>
-        <div class="layout__container layout--half">
+        <div class="layout__container layout--third">
+          <div *ngIf="isNotifications" class="island island--half island--half--left">
+            <div class="checkbox--section-title">
+              Status
+            </div>
+            <div *ngFor="let status of filterOptions.status; let i = index; let l = last;" [class.checkbox--row]="!l">
+              <input type="checkbox" class="checkbox" id="{{ status.text }}" name="{{ status.text }}" autocomplete="off"
+                [(ngModel)]="filterOptions.status[i].enabled"
+                [attr.disabled]="(!iDavis.isAdmin) ? true : null"
+                (change)="validate()" />
+              <label for="{{ status.text }}" class="checkbox__label">
+                <span class="checkbox__caption">{{ status.text }}</span>
+              </label>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="island island--full" *ngIf="iDavis.isAdmin && !isNewFilter">
-        <button type="button" class="btn btn--secondary btn--secondary--delete"
-            (click)="deleteFilter(iConfig.values.filter)">
-            {{ (confirmDeleteFilter) ? 'Confirm Delete Filter' : 'Delete Filter' }}
-        </button>
-      </div>
       <div *ngIf="iDavis.isAdmin" class="island island--center island--submit">
+        <button *ngIf="iDavis.isAdmin && !isNewFilter" type="button" class="btn btn--secondary btn--secondary--delete"
+            (click)="deleteFilter(iConfig.values.filter)">
+            {{ (confirmDeleteFilter) ? 'Confirm Delete ' + filterOrRule : 'Delete ' + filterOrRule }}
+        </button>
         <button type="submit" class="btn btn--primary btn--submit"
             [attr.disabled]="(!form.valid || submitButton === 'Adding...' || submitButton === 'Saving...' || !isDirty) ? true : null">
             {{ submitButton }}

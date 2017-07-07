@@ -1,0 +1,24 @@
+<div class="timezone-input-wrapper">
+  <div class="input-button-wrapper" [class.input-button-wrapper-focus]="isTimezoneFocused">
+    <input #timezoneInput type="text" name="timezone" id="timezone" class="input-button-input" autocomplete="off"
+      [(ngModel)]="value" 
+      (click)="timezoneInput.select()"
+      (focus)="isTimezoneFocused = true" 
+      (blur)="isTimezoneFocused = false" 
+      (keydown)="timezoneInputKeyUp($event)" 
+      (keyup)="validate()"
+      [required]="(iConfig.isWizard) ? '' : null">
+    
+    <div class="input-button-button" title="My Location" (click)="value = iDavis.getTimezone(); valid = true; timezoneChange.emit({name: value, valid: valid})">
+      <svg class="icon icon--black icon--input-button-img" [class.input-button-img-password-masked]="value !== iDavis.getTimezone()" style="width: 18px; height: 18px; margin: 5px">
+        <use xlink:href="#location"></use>
+      </svg>
+    </div>
+  </div>
+  <div *ngIf="isTimezoneFocused && !isTimezoneMatch()" class="tag-list tag-list-keys timezones-list">
+    <div #timezonesList *ngFor="let tz of timezones | timezonePipe:value" class="tag-list-item timezones-list-item" [class.tag-list-item-highlighted]="(highlighted.name === tz.name) || (timezones | timezonePipe:value).length === 1"
+      (mousedown)="value = tz.name; valid = true; timezoneChange.emit({name: value, valid: valid})">
+      <div style="clear: both; float: left">{{ tz.name }}</div><div style="float: right">(GMT {{ tz.offset }})</div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe, 
+import { Component, OnInit, AfterViewInit, Pipe, 
          PipeTransform }                            from '@angular/core';
 import { FormBuilder }                              from '@angular/forms';
 import { Router }                                   from '@angular/router';
@@ -12,7 +12,7 @@ import * as _                                       from "lodash";
   selector: 'config-filters',
   templateUrl: './config-filters.component.html',
 })
-export class ConfigFiltersComponent implements OnInit {
+export class ConfigFiltersComponent implements OnInit, AfterViewInit {
 
   submitted: boolean = false;
   submitButton: string = 'Save';
@@ -80,6 +80,18 @@ export class ConfigFiltersComponent implements OnInit {
     this.getFilters();
     this.iConfig.values.filter = new CommonModel().filter;
     this.iConfig.values.original.filter = new CommonModel().filter;
+  }
+  
+  ngAfterViewInit() {
+    this.iConfig.getDavisFilters()
+      .then(response => {
+        if (!response.success) throw new Error(response.message);
+        this.iConfig.values.filters = response.filters;
+        this.iConfig.values.filter.owner = this.iDavis.values.user._id;
+      })
+      .catch(err => {
+        this.iConfig.displayError(err, null);
+      });
   }
 
 }

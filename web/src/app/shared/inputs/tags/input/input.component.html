@@ -1,0 +1,4 @@
+<div class="tags-wrapper" (click)="addTag()" [class.tags-wrapper-focused]="focus.indexOf(true) > -1">
+  <tag *ngFor="let tag of tags; let i = index;" [keys]="keys" [tag]="tag" [focus]="focus" [focusIndex]="i"
+    (deleteEmptyTags)="deleteEmptyTags()" (click)="preventParentClick($event)"></tag>
+</div>

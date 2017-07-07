@@ -15,7 +15,7 @@
   </div>         
   <div *ngIf="!addFilter && !editFilter" class="island--full-width island--full-width-sidebar island--center island--left">     
     <div class="input-button-wrapper" [class.input-button-wrapper-focus]="isFilterFocused" style="margin-top: -5px; margin-bottom: 15px">
-        <input #filter type="text" id="filter" name="filter" 
+        <input #filter type="text" id="filter" name="filter" autocomplete="off"
           class="users-table-filter-input input-button-input"
           placeholder="Filter by name" 
           (keyup)="updateFilter(filter)"
@@ -35,7 +35,12 @@
         </tr>
       </thead>
     </table>
-    <div class="island--scrollable-table">
+    <div style="visibility: hidden; width: 100%" [style.height]="table.offsetHeight + 'px'" 
+      [style.minHeight]="((filters | filterFiltersByName:{str: filterName, origin: 'QUESTION'}).length < 1) ? null : '350px'">
+    </div>
+    <div #table class="island--scrollable-table" 
+      [style.maxHeight]="(iDavis.getWindowHeight() - 410) + 'px'"
+      (window:resize)="table.style.maxHeight = (iDavis.getWindowHeight() - 410) + 'px'">
       <table *ngIf="!addFilter && !editFilter" class="table">
         <tbody>
           <tr *ngFor="let filter of filters | filterFiltersByName:{str: filterName, origin: 'QUESTION'}">
@@ -47,7 +52,7 @@
             </td>
             <td style="width: 100px">
               <span *ngIf="!iDavis.isAdmin && filter.enabled" style="margin-left: 20px;">&#x2713;</span>
-              <input *ngIf="iDavis.isAdmin" type="checkbox" class="switch to-right" id="{{ filter._id }}" name="{{ filter._id }}"
+              <input *ngIf="iDavis.isAdmin" type="checkbox" class="switch to-right" id="{{ filter._id }}" name="{{ filter._id }}" autocomplete="off"
               	[(ngModel)]="filter.enabled"
               	(change)="saveFilter(filter)">
               <label *ngIf="iDavis.isAdmin" for="{{ filter._id }}" class="switch__label">

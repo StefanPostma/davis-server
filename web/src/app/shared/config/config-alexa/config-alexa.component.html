@@ -32,12 +32,17 @@
     [class.island--full-width-sidebar]="!iConfig.isWizard">
     <div class="island island--center" [class.island--left]="!iConfig.isWizard">
       <label for="alexa_id" class="label">
-        Alexa User ID
+        Amazon Alexa User ID <span *ngIf="!isValidAlexaID"> - <span style="color: #dc172a">Invalid</span></span>
       </label>
-      <input #alexaIds type="text" name="alexa_id"
+      <input #alexaIds type="text" name="alexa_id" autocomplete="off"
         class="inputfield" id="alexa_id"
+        [class.error]="!isValidAlexaID"
         [(ngModel)]="iDavis.values.user.alexa_id" 
         (keyup)="validate()">
+      <p class="hint" id="i9">
+        Manually connect to an Amazon Echo. 
+        <a href="https://github.com/Dynatrace/davis-server/wiki/Setup-Alexa#9---obtain-echo-userid-from-sample-request" target="_blank">Where can I find this?</a>
+      </p>
     </div>
     <div class="island island--center island--submit" [class.island--left]="!iConfig.isWizard">
       <button type="submit" role="button" class="btn btn--primary btn--submit"

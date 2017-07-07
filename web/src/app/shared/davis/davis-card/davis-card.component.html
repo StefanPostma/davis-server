@@ -1,9 +1,24 @@
 <form (ngSubmit)="doSubmit()" #form="ngForm" class="card-form">
   <div *ngIf="message || updated" class="layout is-flex has-islands" style="padding: 0">
-    <div [class.circle-left]="isDavis" [class.circle-right]="!isDavis">
-      {{ (isDavis) ? null : iDavis.values.user.name.first[0].toUpperCase() + iDavis.values.user.name.last[0].toUpperCase() }}
-      <svg *ngIf="isDavis" class="icon icon--white icon--dynatrace-signet">
+    <div [class.circle-left]="isDavis"
+      [class.circle-left-notification]="message && (message.isNotif || (message.visual  && message.visual.card && message.visual.card.error))"
+      [class.circle-left-notification-resolved]="message && message.isNotif && message.visual.card.attachments && message.visual.card.attachments[1].fields[3].value === 'Resolved' 
+        && message === iDavis.conversation[iDavis.conversation.length - 1]"
+      [class.circle-left-notification-unresolved]="message && message.isNotif && message.visual.card.attachments && message.visual.card.attachments[1].fields[3].value !== 'Resolved' 
+        && message === iDavis.conversation[iDavis.conversation.length - 1]" 
+      [class.circle-left-notification-interactive]="false"
+      [class.circle-right]="!isDavis" 
+      (click)="(false && message && (message.isNotif || (message.visual  && message.visual.card && message.visual.card.error))) ? iDavis.deleteNotification(message) : null">
+      {{ (isDavis || !iDavis.values.user.name.first[0]) ? null : iDavis.values.user.name.first[0].toUpperCase() + iDavis.values.user.name.last[0].toUpperCase() }}
+      <svg *ngIf="isDavis && !message.isNotif" class="icon icon--white icon--dynatrace-signet" 
+        [class.icon--notification-hide]="false && message && message.visual && message.visual.card && message.visual.card.error">
         <use xlink:href="#dynatrace-signet"></use>
+      </svg>
+      <svg *ngIf="message && message.isNotif" class="icon icon--white icon--notification" [class.icon--notification-hide]="false">
+        <use xlink:href="#notification"></use>
+      </svg>
+      <svg *ngIf="false && message && (message.isNotif || (message.visual && message.visual.card && message.visual.card.error))" class="icon icon--white icon--notification icon--notification-show">
+        <use xlink:href="#clear"></use>
       </svg>
     </div>
     <div [class.triangle-left-border]="isDavis" [class.triangle-right-border]="!isDavis"></div>
@@ -12,52 +27,68 @@
     <div class="island" [class.island--isDavis]="isDavis" [class.island--isUser]="!isDavis" 
       [class.island--error]="message.visual && message.visual.card && message.visual.card.error" 
       style="padding: 17.5px 16px; margin: 0; border: 0.5px solid #ececec; z-index: 99; min-height: 58px">
-      <div *ngIf="message === {}">
-        <div class="typing-indicator" style="margin-top: 4px">
+      <div *ngIf="message === {} || updateState === 'updating'">
+        <div class="typing-indicator" [class.typing-indicator-centered]="updateState === 'updating'">
           <span></span>
           <span></span>
           <span></span>
         </div>
       </div>
+      <button type="button" class="card-close-button" title="Remove Message"
+        [class.card-close-button-error]="message.visual && message.visual.card && message.visual.card.error"
+        (click)="(message && (message.isNotif || (message.visual && message.visual.card && message.visual.card.error))) ? iDavis.deleteNotification(message) : null">
+        <svg *ngIf="message && (message.isNotif || (message.visual && message.visual.card && message.visual.card.error))" class="icon icon--close" 
+          [class.icon--close-error]="message.visual && message.visual.card && message.visual.card.error">
+          <use xlink:href="#clear"></use>
+        </svg>
+      </button>
       <div *ngIf="message.visual && message.visual.card && message.visual.card.text" 
         [innerHTML]="message.visual.card.text | slackTagConversionPipe:{isAttachment: false, isSentence: true}" class="card-push-animation" style="font-size: 14px"></div>
-      <div *ngIf="message.visual && message.visual.card && message.visual.card.attachments && message.visual.card.attachments.length > 0" 
+      <div *ngIf="message.visual && message.visual.card && message.visual.card.attachments && message.visual.card.attachments.length > 0"
         class="card-attachments card-push-animation"
-        [class.fadeOut]="updating" [class.fadeIn]="updated">
+         [@update]="updateState">
         <div *ngFor="let attachment of message.visual.card.attachments" 
           class="card-attachment"
-          [class.card-content-text-only]="!((attachment.title || attachment.fields || attachment.actions || attachment.actionClicked) || (attachment.author && attachment.author === 'filtered'))">
-          <div *ngIf="(attachment.title || attachment.fields || attachment.actions || attachment.actionClicked) || (attachment.author && attachment.author === 'filtered')" 
+          [class.card-content-text-only]="!((attachment.title || attachment.fields || attachment.actions || attachment.actionClicked || attachment.image_url || attachment.thumb_url) || (attachment.author_name && attachment.author_name === 'filtered'))">
+          <div *ngIf="(attachment.title || attachment.fields || attachment.actions || attachment.actionClicked || attachment.image_url || attachment.thumb_url) || (attachment.author_name && attachment.author_name === 'filtered')" 
             class="card-bar" [style.border-color]="attachment.color"></div>
-          <div class="card-content" [class.card-content-text-only]="!((attachment.title || attachment.fields || attachment.actions || attachment.actionClicked) || (attachment.author && attachment.author === 'filtered'))">
-            <div *ngIf="attachment.author && attachment.author === 'filtered'" style="color: #b7b7b7">
-              <svg style="fill: #00A6FB; width: 15px; height: 15px; vertical-align: sub">
+          <div class="card-content" 
+            [class.card-content-with-thumb-url]="attachment.thumb_url"
+            [class.card-content-text-only]="!((attachment.title || attachment.fields || attachment.actions || attachment.actionClicked || attachment.image_url || attachment.thumb_url) || (attachment.author_name && attachment.author_name === 'filtered'))">
+            <div *ngIf="attachment.author_name" style="color: #b7b7b7; margin-top: -6px">
+              <svg *ngIf="attachment.author_name === 'filtered'" style="fill: #00A6FB; width: 15px; height: 15px; vertical-align: sub">
                 <use xlink:href="#filter"></use>
               </svg>
-              filtered
+              {{ attachment.author_name }}
             </div>
-             <div *ngIf="attachment.pretext" class="card-pretext" [innerHTML]="attachment.pretext | slackTagConversionPipe:{isAttachment: true, isSentence: true}"></div>
-             <a [attr.href]="attachment.title_link" target="_blank" *ngIf="attachment.title_link" class="card-title" [innerHTML]="attachment.title | slackTagConversionPipe:{isAttachment: true}"></a>
-             <div *ngIf="!attachment.title_link && attachment.title" class="card-title" style="color: #6d6d6d; cursor: default" [innerHTML]="attachment.title | slackTagConversionPipe:{isAttachment: true}"></div>
-             <div class="card-text" [innerHTML]="attachment.text | slackTagConversionPipe:{isAttachment: true, isSentence: true}"></div>
-             <div *ngIf="attachment.fields" class="card-fields">
-                <div *ngFor="let field of attachment.fields; let i = index" class="card-field" 
-                  [class.card-field-wrap]="i % 2 == 0" 
-                  [class.card-field-many-rows]="attachment.fields.length > 4">
-                  <div class="card-field-title" [innerHTML]="field.title | slackTagConversionPipe:{isAttachment: true}"></div>
-                  <div class="card-field-value" [innerHTML]="field.value | slackTagConversionPipe:{isAttachment: true}"></div>
-                </div>
-             </div>
-             <div *ngIf="attachment.actions || attachment.actionClicked" class="card-actions">
-                <button *ngFor="let action of attachment.actions" type="button" class="btn btn--secondary btn--submit card-action" 
-                  (click)="addToConvo(attachment.callback_id, action.name, action.value); attachment.actionClicked = action.text; attachment.actions = null">
-                  {{ action.text }}
-                </button>
-                <button *ngIf="attachment.actionClicked" type="button" class="btn btn--secondary btn--submit card-action" disabled>
-                  {{ attachment.actionClicked }}
-                </button>
-             </div>
-             <div *ngIf="attachment.footer" class="card-footer" [innerHTML]="attachment.footer | slackTagConversionPipe:{isAttachment: true, isSentence: true}"></div>
+            <div *ngIf="attachment.pretext" class="card-pretext" [innerHTML]="attachment.pretext | slackTagConversionPipe:{isAttachment: true, isSentence: true}"></div>
+            <a [attr.href]="attachment.title_link" target="_blank" *ngIf="attachment.title_link" class="card-title" [innerHTML]="attachment.title | slackTagConversionPipe:{isAttachment: true}"></a>
+            <div *ngIf="!attachment.title_link && attachment.title" class="card-title" style="color: #6d6d6d; cursor: default" [innerHTML]="attachment.title | slackTagConversionPipe:{isAttachment: true}"></div>
+            <div class="card-text" [innerHTML]="attachment.text | slackTagConversionPipe:{isAttachment: true, isSentence: true}"></div>
+            <div *ngIf="attachment.fields" class="card-fields">
+              <div *ngFor="let field of attachment.fields; let i = index" class="card-field" 
+                [class.card-field-wrap]="(i > 0 && !attachment.fields[i - 1].short) || !field.short"
+                [class.card-field-short]="field.short"
+                [class.card-field-many-rows]="attachment.fields.length > 4">
+                <div class="card-field-title" [innerHTML]="field.title | slackTagConversionPipe:{isAttachment: true}"></div>
+                <div class="card-field-value" [innerHTML]="field.value | slackTagConversionPipe:{isAttachment: true}"></div>
+              </div>
+            </div>
+            <div *ngIf="attachment.actions || attachment.actionClicked" class="card-actions">
+              <button *ngFor="let action of attachment.actions" type="button" class="btn btn--secondary btn--submit card-action" 
+                (click)="addToConvo(attachment.callback_id, action.name, action.value); attachment.actionClicked = action.text; attachment.actions = null">
+                {{ action.text }}
+              </button>
+              <button *ngIf="attachment.actionClicked" type="button" class="btn btn--secondary btn--submit card-action" disabled>
+                {{ attachment.actionClicked }}
+              </button>
+            </div>
+            <div *ngIf="attachment.footer" class="card-footer" [innerHTML]="attachment.footer | slackTagConversionPipe:{isAttachment: true, isSentence: true}"></div>
+            <img *ngIf="attachment.image_url" [src]="attachment.image_url" class="card-image-url"
+              (click)="iDavis.fullScreenImageUrl = (iDavis.fullScreenImageUrl) ? null : attachment.image_url">
+          </div>
+          <div *ngIf="attachment.thumb_url" class="card-thumb-url-wrapper">
+            <img [src]="attachment.thumb_url" class="card-thumb-url">
           </div>
         </div>
       </div>
@@ -65,5 +96,5 @@
   </div>
 </form>
 <div class="card-timestamp" [class.card-timestamp-davis]="isDavis" [class.card-timestamp-user]="!isDavis">
-  {{ message.timestamp }}
+  {{ (message) ? message.timestamp : null }}
 </div>

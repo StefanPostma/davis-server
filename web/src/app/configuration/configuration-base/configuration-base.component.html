@@ -1,18 +1,17 @@
 <div class="layout is-flex config-background">
   <nav class="sidebar sidebar-sm" [class.hide-sm]="!iDavis.isSidebarVisible">
-    <span *ngFor="let item of sidebarItems | filterSidebarItemsByAdminPipe:iDavis.isAdmin:iConfig.values.original.slack.clientId">
+    <span *ngFor="let item of sidebarItems | filterSidebarItemsByAdminPipe:iDavis.isAdmin">
       <a *ngIf="!item.items" class="sidebar__item" [class.is-active]="iConfig.view === item.key" 
         (click)="iConfig.selectView(item.key); iDavis.isSidebarVisible = false; expandedSection = ''; sidebarItems.notifications.expanded = false;">
         <span class="sidebar__headline">{{ item.name }}</span>
       </a>
       <div *ngIf="item.items" class="expandable" 
-        [class.expandable--expanded]="expandedSection === item.key || ((iConfig.view === item.key || iConfig.view.indexOf('notification') > -1) && expandedSection === '' && item.expanded !== false)"
-        [class.is-expanded]="expandedSection === item.key || ((iConfig.view === item.key || iConfig.view.indexOf('notification') > -1) && expandedSection === '' && item.expanded !== false)"
-        [class.is-active]="expandedSection === item.key || ((iConfig.view === item.key || iConfig.view.indexOf('notification') > -1) && expandedSection === '' && item.expanded !== false)">
+        [class.expandable--expanded]="isExpanded(item)"
+        [class.is-expanded]="isExpanded(item)"
+        [class.is-active]="isExpanded(item)">
         <a class="sidebar__item expandable__trigger expandable__trigger--right" 
           [class.closed]="(expandedSection !== item.key || !item.expanded) && iConfig.view !== item.key"
-          (click)="item.expanded = (item.expanded === null && iConfig.view.indexOf('notification') > -1) ? false : !item.expanded; 
-            (item.expanded && iConfig.view.indexOf('notification') < 0) ? iConfig.selectView('notification-filters') : null; expandedSection = (item.expanded) ? item.key : '';">
+          (click)="expandSection(item)">
           <span class="sidebar__headline">{{ item.name }}</span>
           <span class="sidebar__info">{{ item.description }}</span>
         </a>
@@ -24,16 +23,20 @@
         </div>
       </div>
     </span>
+    <div *ngIf="iConfig.values.dynatrace.url && iConfig.values.dynatrace.url.length > 0" class="connected connected-sidebar">
+      Connected Tenant: <a [href]="iConfig.values.dynatrace.url" target="_blank">{{ iConfig.values.dynatrace.url.replace('https://', '') }}</a>
+    </div>
   </nav>
   <div class="island island--connected">
     <config-user *ngIf="iConfig.view === 'user'" [isNewUser]="false" [isMyUser]="true"></config-user>
     <config-users *ngIf="iConfig.view === 'users'"></config-users>
     <config-filters *ngIf="iConfig.view === 'filters'"></config-filters>
-    <config-notification-filters *ngIf="iConfig.view === 'notification-filters'"></config-notification-filters>
-    <config-notification-source *ngIf="iConfig.view === 'notification-source'"></config-notification-source>
-    <config-dynatrace *ngIf="iConfig.view === 'dynatrace'"></config-dynatrace>
-    <config-ymonitor *ngIf="iConfig.view === 'ymonitor'"></config-ymonitor> 
-    <config-slack *ngIf="iConfig.view === 'slack'"></config-slack>
+    <config-notification-rules *ngIf="iConfig.view === 'notification-rules'"></config-notification-rules>
+    <config-notification-source *ngIf="iConfig.view === 'notification-source' && iDavis.isAdmin"></config-notification-source>
+    <config-dynatrace-entities *ngIf="iConfig.view === 'dynatrace-applications'" [category]="'Applications'"></config-dynatrace-entities>
+    <config-dynatrace-entities *ngIf="iConfig.view === 'dynatrace-services'" [category]="'Services'"></config-dynatrace-entities>
+    <config-dynatrace-connect *ngIf="iConfig.view === 'dynatrace-connect' && iDavis.isAdmin"></config-dynatrace-connect>
+    <config-slack *ngIf="iConfig.view === 'slack' && iDavis.isAdmin"></config-slack>
     <config-chrome *ngIf="iConfig.view === 'chrome'"></config-chrome>
   </div>
 </div>

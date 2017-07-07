@@ -1,7 +1,13 @@
-<form (ngSubmit)="doSubmit()" #form="ngForm">
+<form (ngSubmit)="doSubmit($event)" #form="ngForm">
   <div class="layout is-flex has-islands">
     <div class="island island--full-width" style="background-color: transparent; margin: 0; padding: 0">
       <div *ngFor="let message of iDavis.conversation; let i = index;" class="layout is-flex has-islands">
+        <div *ngIf="iDavis.conversation[i - 1] && hoursApart(iDavis.conversation[i - 1].moment, message.moment) > 0" class="timebreak"
+          style="background-color: transparent; position: relative; padding: 0">
+          <div class="timebreak-text">
+            Over {{ hoursApart(iDavis.conversation[i - 1].moment, message.moment) }} hour{{ (hoursApart(iDavis.conversation[i - 1].moment, message.moment) > 1) ? 's' : null }} apart
+          </div>
+        </div>
         <davis-card class="island island--center" style="background-color: transparent; position: relative; padding: 0" 
           [message]="message" [isDavis]="message.isDavis"
           (toggleProcessingIndicator)="showProcessingIndicator = !showProcessingIndicator"></davis-card>
@@ -11,15 +17,18 @@
           [message]="{}" [isDavis]="true"
           (toggleProcessingIndicator)="showProcessingIndicator = !showProcessingIndicator"></davis-card>
       </div>
-      <div *ngIf="iDavis.conversation.length < 1 && !iDavis.isIframeTile" class="layout is-flex has-islands" 
+      <div *ngIf="iDavis.conversation.length < 1 && !iDavis.isIframeTile && !iDavis.globalError" class="layout is-flex has-islands" 
         [class.fadeIn]="iDavis.conversation.length < 1"
         [class.slideDownDavisCard]="iDavis.conversation.length < 1">
-        <div class="island island--center" style="height: 299px; border: 0.5px solid #ececec">
-          <svg style="fill: #004999; width: 175px; height: 175px; display: block; margin: 0 auto; margin-top: 20px">
+        <div class="island island--center davis-card" style="height: 299px; border: 0.5px solid #ececec">
+          <svg>
             <use xlink:href="#davis"></use>
           </svg>
           <div style="text-align: center; margin-top: 15px; padding: 0px 16px">
             Davis here, your DevOps assistant, ask me something below!
+          </div>
+          <div *ngIf="iConfig.values.dynatrace.url && iConfig.values.dynatrace.url.length > 0" class="connected connected-card" style="text-align: center">
+            Connected Tenant: <a [href]="iConfig.values.dynatrace.url" target="_blank">{{ iConfig.values.dynatrace.url.replace('https://', '') }}</a>
           </div>
         </div>
       </div>
@@ -30,26 +39,27 @@
     [class.fadeIn]="iDavis.conversation.length < 1" 
     [class.slideUpDavisInput]="iDavis.conversation.length < 1">
     <div class="layout is-flex has-islands is-flex--compact" style="padding-bottom: 0;">
-      <div class="island island--center island--davisInput-border">         
+      <div class="island island--center island--center-davisInput island--davisInput-border">         
         <label for="davisInput" class="label label--compact">
             {{ davisMode.title }}
         </label>
         <div class="input-button-wrapper" [class.input-button-wrapper-focus]="isDavisInputFocused">
-          <input #davisIn type="text" id="davisInput" 
+          <input #davisIn type="text" id="davisInput"
             name="davisInput" class="input-button-input" 
             [(ngModel)]="davisInput"
             [attr.placeholder]="placeholder"
-            (keyup.enter)="doSubmit()"
+            (keydown)="iDavis.isTyping = true"
+            (keyup.enter)="doSubmit($event)"
             (focus)="isDavisInputFocused = true; toggleListening(false)"
             (blur)="isDavisInputFocused = false">
           
-          <div *ngIf="davisMode.name !== 'noMic' && davisInput.length < 1" class="input-button-button" (click)="toggleListening(!isDavisListening)">
+          <div *ngIf="davisMode.name !== 'noMic' && davisInput.length < 1 && !showProcessingIndicator" class="input-button-button" (click)="toggleListening(!isDavisListening)">
             <svg class="icon icon--black icon--input-button-img" [class.input-button-img-password-masked]="isDavisInputFocused || !isDavisListening">
               <use xlink:href="#mic"></use>
             </svg>
           </div>
           
-          <div *ngIf="davisInput && davisInput.length > 0" class="input-button-button" (click)="doSubmit()">
+          <div *ngIf="davisInput && davisInput.length > 0 && !showProcessingIndicator" class="input-button-button" (click)="doSubmit($event)">
             <svg class="icon icon--black icon--input-button-img">
               <use xlink:href="#send"></use>
             </svg>

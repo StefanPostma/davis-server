@@ -2,6 +2,7 @@
 
 const chai = require('chai');
 const nock = require('nock');
+const _ = require('lodash');
 
 chai.use(require('chai-as-promised'));
 
@@ -19,18 +20,18 @@ describe('Nlp', () => {
     .post('/prod/datetime')
     .reply(200, davisParserData);
 
-  const nlp = new Nlp(davis, { apps: [
-    {
-      name: 'Test App',
-      category: '',
-      entityId: '',
-      display: {
-        visual: '',
-        audible: '',
-      },
-      aliases: ['test app', 'testapp', 'testing app'],
+  const nlp = new Nlp(davis);
+
+  _.set(nlp, 'pluginManager.entities.applications', [{
+    name: 'Test App',
+    category: '',
+    entityId: '',
+    display: {
+      visual: '',
+      audible: '',
     },
-  ]});
+    aliases: ['test app', 'testapp', 'testing app'],
+  }]);
 
   nlp.addDocument('what happened yesterday with testapp', 'problem');
   nlp.addDocument('what version are you running');
@@ -39,19 +40,6 @@ describe('Nlp', () => {
   const exchange = new Exchange(davis, { id: 'testuser', timezone: 'America/Detroit' });
   const started = exchange.start('what happened yesterday with testapp', 'alexa', 'test')
             .then(e => nlp.process(e));
-
-  it('should create with apps', () => {
-    nlp.apps.should.have.lengthOf(1);
-  });
-
-  it('should add apps', () => {
-    nlp.addApp({
-      name: 'Testing DB',
-      aliases: ['testing db', 'test db'],
-    });
-
-    nlp.apps.should.have.lengthOf(2);
-  });
 
   it('should classify strings', () => {
     const classified = nlp.classify('what happened yesterday with testapp');

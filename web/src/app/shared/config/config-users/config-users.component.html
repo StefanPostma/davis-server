@@ -15,7 +15,7 @@
   </div>         
   <div *ngIf="!addUser && !editUser" class="island--full-width island--full-width-sidebar island--center island--left">     
     <div class="input-button-wrapper" [class.input-button-wrapper-focus]="isFilterFocused" style="margin-top: -5px; margin-bottom: 15px">
-        <input #filter type="text" 
+        <input #filter type="text" autocomplete="off"
             class="users-table-filter-input input-button-input"
             placeholder="Filter by name" 
             (keyup)="updateFilter(filter)"
@@ -35,7 +35,12 @@
         </tr>
       </thead>
     </table>
-    <div class="island--scrollable-table">
+    <div style="visibility: hidden; width: 100%" [style.height]="table.offsetHeight + 'px'" 
+      [style.minHeight]="((filters | filterFiltersByName:{str: filterName, origin: 'QUESTION'}).length < 1) ? null : '350px'">
+    </div>
+    <div #table class="island--scrollable-table" 
+      [style.maxHeight]="(iDavis.getWindowHeight() - 410) + 'px'"
+      (window:resize)="table.style.maxHeight = (iDavis.getWindowHeight() - 410) + 'px'">
       <table *ngIf="!addUser && !editUser" class="table">
         <tbody>
           <tr *ngFor="let user of users | filterUsersByName:filterName" (click)="editMode(user)">
