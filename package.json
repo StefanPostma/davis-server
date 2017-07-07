@@ -14,7 +14,7 @@
   "scripts": {
     "predev": "gulp compile:dev",
     "dev": "node ./bin/davis-server",
-    "start": "npm install xml2js -g && node ./bin/davis-server",
+    "start": "npm install xml2js --save && node ./bin/davis-server",
     "test": "istanbul cover node_modules/mocha/bin/_mocha tests/all -- -R spec --recursive --timeout 10000",
     "debug-test": "mocha tests/all --debug-brk",
     "lint": "eslint lib && echo",
