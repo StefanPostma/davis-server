@@ -12,7 +12,9 @@
     "node": ">= 6.0.0"
   },
   "scripts": {
-    "start": "npm install &&  node ./index.js",
+   "predev": "gulp compile:dev",
+    "dev": "node ./bin/davis-server",
+    "start": "npm install && node ./bin/davis-server",
     "test": "istanbul cover node_modules/mocha/bin/_mocha tests/all -- -R spec --recursive --timeout 10000",
     "debug-test": "mocha tests/all --debug-brk",
     "lint": "eslint lib && echo",
