@@ -19,7 +19,6 @@
     "debug-test": "mocha tests/all --debug-brk",
     "lint": "eslint lib && echo",
     "jsdoc": "jsdoc -r lib",
-    "heroku-postbuild": "gulp --gulpfile heroku.gulpfile.js get-dist",
     "precompile:watch": "gulp clean",
     "compile:watch": "webpack --watch --display-error-details --progress"
   },
