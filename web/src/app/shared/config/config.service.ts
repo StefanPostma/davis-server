@@ -22,9 +22,8 @@ import { DavisModel }               from '../models/davis.model';
 @Injectable()
 export class ConfigService {
   // Initialize view
-  view: string = "dynatrace";
+  view: string = "dynatrace-connect";
   helpLinkText: string = 'How to complete this step';
-  timezones: any = require('./../../../../../lib/config/timezones');
   titleGlobal: string = '';
   isWizard: boolean = false;
   isSidebarVisible: boolean = false;
@@ -143,25 +142,46 @@ export class ConfigService {
       .then(this.iDavis.extractData)
       .catch(this.iDavis.handleError);
   }
-  getYmonitor(): Promise<any> {
-      let headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': this.iDavis.token });
-      let options = new RequestOptions({ headers: headers });
+  
+  getDynatraceApplications(): Promise<any> {
+    let headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': this.iDavis.token } );
+    let options = new RequestOptions({ headers: headers });
 
-      return this.http.get('/api/v1/system/config/ymonitor', options)
-        .toPromise()
-        .then(this.iDavis.extractData)
-        .catch(this.iDavis.handleError);
-    }
-  connectYmonitor(): Promise<any> {
-      let headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': this.iDavis.token } );
-      let options = new RequestOptions({ headers: headers });
+    return this.http.get('/api/v1/dynatrace/applications', options)
+      .toPromise()
+      .then(this.iDavis.extractData)
+      .catch(this.iDavis.handleError);
+  }
+  
+  getDynatraceServices(): Promise<any> {
+    let headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': this.iDavis.token } );
+    let options = new RequestOptions({ headers: headers });
 
-      return this.http.put('/api/v1/system/config/ymonitor', this.values.ymonitor, options)
-        .toPromise()
-        .then(this.iDavis.extractData)
-        .catch(this.iDavis.handleError);
-    }
+    return this.http.get('/api/v1/dynatrace/services', options)
+      .toPromise()
+      .then(this.iDavis.extractData)
+      .catch(this.iDavis.handleError);
+  }
+  
+  getDynatraceAliases(): Promise<any> {
+    let headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': this.iDavis.token } );
+    let options = new RequestOptions({ headers: headers });
 
+    return this.http.get('/api/v1/system/aliases', options)
+      .toPromise()
+      .then(this.iDavis.extractData)
+      .catch(this.iDavis.handleError);
+  }
+  
+  setDynatraceAliases(entity: any, category: string): Promise<any> {
+    let headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': this.iDavis.token } );
+    let options = new RequestOptions({ headers: headers });
+
+    return this.http.put(`/api/v1/system/aliases/${category}/${entity.aliasId}`, entity, options)
+      .toPromise()
+      .then(this.iDavis.extractData)
+      .catch(this.iDavis.handleError);
+  }
 
   getDynatrace(): Promise<any> {
     let headers = new Headers({ 'Content-Type': 'application/json', 'x-access-token': this.iDavis.token } );
@@ -253,13 +273,21 @@ export class ConfigService {
       .catch(this.iDavis.handleError);
   }
   
-  displayError(message: string, category: string): void {
+  displayError(error: any, category: string): void {
+    let errMsg: string;
+    if (error instanceof Response) {
+      if (error && error.status === 403) this.iDavis.logOut();
+      if (error.status === 0) {
+        errMsg = 'The connection to Davis was lost!';
+      } else  {
+        errMsg = `${error.status} - ${error.statusText}`;
+      }
+    } else {
+      errMsg = error.message ? error.message : error.toString();
+    }
     if (category) {
       this.status[category].success = false;
-      this.status[category].error = message || 'Sorry an error occurred, please try again.';
-    }
-    if (typeof message === 'string' && message.indexOf('invalid token') > -1) {
-      this.iDavis.logOut();
+      this.status[category].error = errMsg || 'Sorry an error occurred, please try again.';
     }
   }
 }

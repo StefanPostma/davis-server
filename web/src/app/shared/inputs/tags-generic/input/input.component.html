@@ -1,0 +1,16 @@
+<div class="tags-wrapper" (click)="addTag()" [class.tags-wrapper-focused]="focused">
+  <div *ngFor="let tag of tags; let i = index; trackBy:customTrackBy" (click)="preventParentEvent($event)">
+    <span class="tag" [class.tag-empty]="!tags[i] || tags[i] === ''" style="overflow: visible" (click)="tagInput.focus()">
+      <input #tagInput [(ngModel)]="tags[i]" name="tag" type="text" autocomplete="off" spellcheck="false"
+        class="tag-input tag-input-value tag__value tag-input-generic"
+        [style.width.px]="tagInputWidthHelper.offsetWidth + 12"
+        (keyup.enter)="preventParentEvent($event); addTag()"
+        (keyup)="tagsChange.emit()"
+        (click)="preventParentEvent($event)"
+        (focus)="focused = true"
+        (blur)="focusBlur(tagInput.value)">
+        <span #tagInputWidthHelper class="position-off-screen">{{ tags[i] }}</span>
+      <button *ngIf="tags[i] && tags[i] !== ''" class="tag__delete" style="margin-left: 0" tabindex="-1" (mousedown)="tags[i] = ''; deleteEmptyTags()"></button>
+    </span>
+  </div>
+</div>

@@ -71,6 +71,11 @@ export class WizardGuard implements CanActivate {
   // ------------------------------------------------------
   CheckUserResponse(response: any) {
     if (response.success) {
+      sessionStorage.removeItem('email');
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('chromeToken');
+      sessionStorage.removeItem('isAdmin');
+      sessionStorage.removeItem('conversation');
       this.iConfig.isWizard = true;
       this.iDavis.token = response.token;
       this.iDavis.values.user.admin = true;

@@ -31,7 +31,7 @@
               Enable all notification levels, then click the Test button. If the test was successful, click the Save button.
             </li>
             <li>
-              In order to start receiving notifications, you must add at least one filter in <a (click)="iConfig.selectView('notification-filters')" style="cursor: pointer">Notification - Filters</a>.
+              In order to start receiving notifications, you must add at least one filter in <a (click)="iConfig.selectView('notification-rules')" style="cursor: pointer">Notification - Rules</a>.
             </li>
           </ul>
         </div>
@@ -46,7 +46,7 @@
             Webhook URL
           </label>
           <div class="input-button-wrapper" [class.input-button-wrapper-focus]="isWebhookUrlFocused">
-              <input type="text" id="webhookUrl" name="webhookUrl" class="input-button-input" 
+              <input type="text" id="webhookUrl" name="webhookUrl" class="input-button-input" autocomplete="off"
                   [(ngModel)]="webhookUrl"
                   (focus)="isWebhookUrlFocused = true" (blur)="isWebhookUrlFocused = false" (click)="iDavis.clickElem('webhookUrlBtn')" readonly>
               
@@ -62,7 +62,7 @@
             Custom JSON Payload
           </label>
           <div class="input-button-wrapper" [class.input-button-wrapper-focus]="isPayloadFocused">
-              <input type="text" id="payload" name="payload" class="input-button-input" 
+              <input type="text" id="payload" name="payload" class="input-button-input" autocomplete="off"
                   [(ngModel)]="iConfig.values.notifications.config"
                   (focus)="isPayloadFocused = true" (blur)="isPayloadFocused = false" (click)="iDavis.clickElem('payloadBtn')" readonly>
   

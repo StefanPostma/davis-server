@@ -1,4 +1,5 @@
-import { Component, OnInit, Pipe, PipeTransform }   from '@angular/core';
+import { Component, OnInit, AfterViewInit,
+         Pipe, PipeTransform }   from '@angular/core';
 import { FormBuilder }                              from '@angular/forms';
 import { Router }                                   from '@angular/router';
 import { ConfigService }                            from '../config.service';
@@ -10,7 +11,7 @@ import * as _                                       from "lodash";
     selector: 'config-users',
     templateUrl: './config-users.component.html',
 })
-export class ConfigUsersComponent implements OnInit {
+export class ConfigUsersComponent implements OnInit, AfterViewInit {
 
     submitted: boolean = false;
     submitButton: string = 'Save';
@@ -79,8 +80,11 @@ export class ConfigUsersComponent implements OnInit {
     }
 
     ngOnInit() {
-      this.getUsers();
       this.iConfig.values.otherUser = new DavisModel().config.values.otherUser;
+    }
+    
+    ngAfterViewInit() {
+      this.getUsers();
     }
 
 }

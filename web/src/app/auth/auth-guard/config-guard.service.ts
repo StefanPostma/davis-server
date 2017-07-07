@@ -50,7 +50,7 @@ export class ConfigGuard implements CanActivate {
     if (!this.iConfig.isWizard && !this.iDavis.token) {
       return this.CheckUser();
     } else {
-      return true;
+      return this.isAuthorized();
     }
   }
 
@@ -73,6 +73,11 @@ export class ConfigGuard implements CanActivate {
   // ------------------------------------------------------
   CheckUserResponse(response: any) {
     if (response.success) {
+      sessionStorage.removeItem('email');
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('chromeToken');
+      sessionStorage.removeItem('isAdmin');
+      sessionStorage.removeItem('conversation');
       this.iConfig.isWizard = true;
       this.iDavis.token = response.token;
       this.iDavis.values.user.admin = true;
@@ -82,11 +87,13 @@ export class ConfigGuard implements CanActivate {
         && sessionStorage.getItem('isAdmin')
         && sessionStorage.getItem('email')) {
       this.iConfig.isWizard = false;
-      this.iDavis.token = sessionStorage.getItem('token'); 
+      this.iDavis.token = sessionStorage.getItem('token');
       this.iDavis.isAuthenticated = true;
       this.iDavis.isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+      this.iDavis.chromeToken = sessionStorage.getItem('chromeToken');
+      if (!this.iDavis.socket && this.iDavis.chromeToken) this.iDavis.connectSocket();
       this.iDavis.values.authenticate.email = sessionStorage.getItem('email');
-      return true;
+      return this.isAuthorized();
     } else {
       this.iConfig.isWizard = false;
       this.router.navigate(["/auth/login"], this.navigationExtras);
@@ -101,5 +108,20 @@ export class ConfigGuard implements CanActivate {
     this.iConfig.isWizard = false;
     this.router.navigate(["/auth/login"], this.navigationExtras);
     return false;
+  }
+  
+  isAuthorized(): boolean {
+    if (!this.iDavis.isAdmin && (
+      this.navigationExtras.fragment === 'alexa'
+      || this.navigationExtras.fragment === 'dynatrace-connect' 
+      || this.navigationExtras.fragment === 'slack' 
+      || this.navigationExtras.fragment === 'notification-source'
+    )) {
+      this.navigationExtras.fragment = '';
+      this.router.navigate(["/davis"], this.navigationExtras);
+      return false;
+    } else {
+      return true;
+    }
   }
 }

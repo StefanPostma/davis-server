@@ -8,7 +8,10 @@
 // Imports
 // ----------------------------------------------------------------------------
 // Angular
-import { NgModule }               from "@angular/core";
+import { NgModule,
+         Injectable,
+         Injector,
+         ErrorHandler }           from "@angular/core";
 import { BrowserModule }          from "@angular/platform-browser";
 import { FormsModule }            from "@angular/forms";
 import { HttpModule,
@@ -34,6 +37,28 @@ import { DavisGuard }   from "./auth/auth-guard/davis-guard.service";
 import { WizardGuard }  from "./auth/auth-guard/wizard-guard.service";
 import { DavisService } from "./shared/davis.service";
 
+// Dyntrace error reporter 
+declare var dtrum: any;
+
+@Injectable()
+class MyErrorHandler implements ErrorHandler {
+  
+  private iDavis: DavisService;
+  constructor (injector: Injector) {
+    setTimeout(() => {
+      this.iDavis = injector.get(DavisService);
+    }, 0);
+  }
+    
+  handleError(error: any) {
+    console.log(error);
+    this.iDavis.globalError = "Oops! Something went wrong, please refresh this tab if issues persist.";
+    if  (typeof dtrum !== "undefined") {
+      dtrum.reportError(Error);
+    }
+  }
+}
+
 // ----------------------------------------------------------------------------
 // Module
 // ----------------------------------------------------------------------------
@@ -57,11 +82,12 @@ import { DavisService } from "./shared/davis.service";
     WizardModule,
   ],
   providers: [
+    DavisService,
+    {provide: ErrorHandler, useClass: MyErrorHandler},
     {provide: APP_BASE_HREF, useValue: '/'},
     ConfigGuard,
     DavisGuard,
     WizardGuard,
-    DavisService,
   ],
 })
 

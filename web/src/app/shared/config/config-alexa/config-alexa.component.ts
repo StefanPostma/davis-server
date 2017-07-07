@@ -20,6 +20,7 @@ export class ConfigAlexaComponent implements OnInit, AfterViewInit {
   submitted: boolean = false;
   submitButton: string = (this.iConfig.isWizard) ? 'Skip' : 'Save';
   isDirty: boolean = false;
+  isValidAlexaID: boolean = true;
 
   constructor(
     private renderer: Renderer,
@@ -60,6 +61,13 @@ export class ConfigAlexaComponent implements OnInit, AfterViewInit {
       this.submitButton = 'Skip';
     }
     this.isDirty = !_.isEqual(this.iDavis.values.user, this.iConfig.values.original.user);
+    if (this.iDavis.values.user.alexa_ids[0] && this.iDavis.values.user.alexa_ids[0].length > 0 && (!(this.iDavis.values.user.alexa_ids[0].indexOf('amzn') > -1 
+      || 'amzn'.indexOf(this.iDavis.values.user.alexa_ids[0]) > -1) || this.iDavis.values.user.alexa_ids[0].indexOf('@') > -1)) { 
+      this.isDirty = false;
+      this.isValidAlexaID = false;
+    } else {
+      this.isValidAlexaID = true;
+    }
   }
 
   resetSubmitButton() {

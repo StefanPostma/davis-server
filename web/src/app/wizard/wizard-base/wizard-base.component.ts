@@ -8,12 +8,12 @@
 // Imports
 // ----------------------------------------------------------------------------
 // Angular
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit }                from "@angular/core";
 
 // Services
-import { ConfigService } from "../../shared/config/config.service";
-import { DavisService }  from "../../shared/davis.service";
-import * as _ from "lodash";
+import { ConfigService }                    from "../../shared/config/config.service";
+import { DavisService }                     from "../../shared/davis.service";
+import * as _                               from "lodash";
 
 // ----------------------------------------------------------------------------
 // Class
@@ -27,9 +27,7 @@ export class WizardBaseComponent implements OnInit {
   // ------------------------------------------------------
   // Inject services
   // ------------------------------------------------------
-  constructor(public iConfig: ConfigService, public iDavis: DavisService) { 
-    this.iConfig.titleGlobal = 'Setup';
-  }
+  constructor(public iConfig: ConfigService, public iDavis: DavisService) {}
 
   ngOnInit() {
     this.iDavis.isBreadcrumbsVisible = true;
@@ -50,7 +48,7 @@ export class WizardBaseComponent implements OnInit {
         }
       })
       .catch(err => {
-        this.iConfig.displayError(err, 'dynatrace');
+        this.iConfig.displayError(err, 'dynatrace-connect');
       });
   }
 }

@@ -33,6 +33,7 @@ export class ConfigFilterComponent implements OnInit, OnChanges, AfterViewInit {
   submitButtonDefault: string;
   isDirty: boolean = false;
   confirmDeleteFilter: boolean = false;
+  filterOrRule: string = 'Filter';
 
   constructor(
     private renderer: Renderer,
@@ -46,6 +47,13 @@ export class ConfigFilterComponent implements OnInit, OnChanges, AfterViewInit {
     // Safari autocomplete polyfill - https://github.com/angular/angular.js/issues/1460
     this.iConfig.values.filter.name = this.iDavis.safariAutoCompletePolyFill(this.iConfig.values.filter.name, 'name');
     this.iConfig.values.filter.origin = this.iDavis.safariAutoCompletePolyFill(this.iConfig.values.filter.origin, 'origin');
+    
+    if (this.iConfig.values.filter.entityTags.length > 0) {
+      this.iConfig.values.filter.entity = [];
+      this.iConfig.values.filter.entityTags.forEach((tag: any) => {
+        if (tag.value && tag.value._id) this.iConfig.values.filter.entity.push(tag.value._id);
+      });
+    }
     
     this.buildScope();
     
@@ -117,7 +125,17 @@ export class ConfigFilterComponent implements OnInit, OnChanges, AfterViewInit {
         });
       }
     }
-    this.isDirty = !_.isEqual(this.iConfig.values.filter, this.iConfig.values.original.filter);
+    
+    // Verify all entities have a value
+    let validValues = true;
+    if (this.iConfig.values.filter.entityTags) {
+      this.iConfig.values.filter.entityTags.forEach((tag: any) => {
+        if (validValues && !tag.value._id) validValues = false;
+      });
+    }
+    this.isDirty = (validValues || (this.iConfig.values.filter.entityTags.length === 1 && 
+      this.iConfig.values.filter.entityTags[0].value.name === '')) 
+      ? !_.isEqual(this.iConfig.values.filter, this.iConfig.values.original.filter) : false;
   }
   
   removeNullProperties(filter: any): any {
@@ -177,6 +195,7 @@ export class ConfigFilterComponent implements OnInit, OnChanges, AfterViewInit {
   }
   
   init() {
+    this.filterOrRule = (this.isNotifications) ? 'Rule' : 'Filter';
     this.iConfig.getDavisUsers()
       .then(response => {
         if (!response.success) throw new Error(response.message);
@@ -234,11 +253,6 @@ export class ConfigFilterComponent implements OnInit, OnChanges, AfterViewInit {
     this.filterScopes = new DavisModel().filterScopes;
     this.filterOptions = new DavisModel().filterOptions;
     
-    if (this.isNotifications) {
-      this.filterScope.source = 'slack';
-      this.filterScopes.sources = [this.filterScopes.sources[2]];
-    }
-    
     // Set checkbox values
     for(let key in this.filterOptions) {
       if (key !== 'origin') {
@@ -259,6 +273,21 @@ export class ConfigFilterComponent implements OnInit, OnChanges, AfterViewInit {
         if (exploded.length > 1 && exploded[0] === 'slack') this.filterScope.team_id = exploded[1];
         if (exploded.length > 2 && exploded[0] === 'slack') this.filterScope.channel_id = exploded[2];
       }
+    }
+    
+    // Convert entity model to match tag model
+    this.iConfig.values.filter.entityTags = [];
+    if (this.iConfig.values.filter.entity && this.iConfig.values.filter.entity.length > 0) {
+      this.iConfig.values.filter.entity.forEach((entity: any, index: number) => {
+        this.iConfig.values.filter.entityTags.push({
+          key: (entity.category === 'applications') ? 'Application' : 'Service',
+          value: {
+            _id: entity._id,
+            name: entity.name,
+            entityId: entity.entityId,
+          },
+        });
+      });
     }
     
     setTimeout(() => {

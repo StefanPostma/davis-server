@@ -45,12 +45,14 @@ export class ConfigurationBaseComponent implements OnInit {
     notifications: {
       key: 'notifications',
       name: 'Notifications',
+      prefix: 'notification-',
+      default: 'notification-rules',
       admin: false,
       expanded: null,
       items: {
-        'notification-filters': {
-          key: 'notification-filters',
-          name: 'Filters',
+        'notification-rules': {
+          key: 'notification-rules',
+          name: 'Rules',
           admin: false,
         },
         'notification-source': {
@@ -63,7 +65,27 @@ export class ConfigurationBaseComponent implements OnInit {
     dynatrace: {
       key: 'dynatrace',
       name: 'Dynatrace',
+      prefix: 'dynatrace-',
+      default: 'dynatrace-applications',
       admin: true,
+      expanded: null,
+      items: {
+        'dynatrace-applications': {
+          key: 'dynatrace-applications',
+          name: 'Applications',
+          admin: false,
+        },
+        'dynatrace-services': {
+          key: 'dynatrace-services',
+          name: 'Services',
+          admin: false,
+        },
+        'dynatrace-connect': {
+          key: 'dynatrace-connect',
+          name: 'Connect to Tenant',
+          admin: true,
+        },
+      }
     },
     ymonitor: {
         key: 'ymonitor',
@@ -77,7 +99,7 @@ export class ConfigurationBaseComponent implements OnInit {
     },
     chrome: {
       key: 'chrome',
-      name: 'Chrome Extension',
+      name: 'Voice Navigation',
       admin: false,
     },
   };
@@ -94,6 +116,23 @@ export class ConfigurationBaseComponent implements OnInit {
     public iConfig: ConfigService,
     public iDavis: DavisService
   ) { }
+  
+  isExpanded(item: any): boolean {
+    return this.expandedSection === item.key 
+      || ((this.iConfig.view === item.key || this.iConfig.view.indexOf(item.prefix) > -1)
+        && this.expandedSection === '' && item.expanded !== false);
+  }
+  
+  expandSection(item: any) {
+    for (var sidebarItem in this.sidebarItems) {
+      if (this.sidebarItems[sidebarItem].expanded && item.key !== this.expandedSection) {
+        this.sidebarItems[sidebarItem].expanded = false;
+      }
+    }
+    item.expanded = (item.expanded === null && this.iConfig.view.indexOf(item.prefix) > -1) ? false : !item.expanded; 
+    (item.expanded && this.iConfig.view.indexOf(item.prefix) < 0) ? this.iConfig.selectView(item.default) : null;
+    this.expandedSection = (item.expanded) ? item.key : '';
+  }
 
   // ------------------------------------------------------
   // Initialize component
@@ -103,11 +142,28 @@ export class ConfigurationBaseComponent implements OnInit {
 
     this.route
       .fragment
-      .map(fragment => fragment || 'None')
+      .map(fragment => fragment || '')
       .subscribe(value => {
-        if (this.sidebarItems[value]) {
-          this.iConfig.selectView(value);
-        } else if (value.indexOf('notification') > -1) {
+        
+        // Check if section is nested inside expandable and user has permission
+        let isVisible = false;
+        if (!this.iDavis.isAdmin) {
+          if (!this.sidebarItems[value]) {
+            for (let key in this.sidebarItems) {
+              if (this.sidebarItems[key].prefix 
+                && value.indexOf(this.sidebarItems[key].prefix) > -1
+                && !this.sidebarItems[key].items[value].admin) {
+                isVisible = true;
+              }
+            } 
+          } else if (!this.sidebarItems[value].admin) {
+            isVisible = true;
+          }
+        } else if (value.length > 0) {
+          isVisible = true;
+        }
+        
+        if (isVisible && value !== 'configuration') {
           this.iConfig.selectView(value);
         } else {
           this.iConfig.selectView('user');
@@ -116,12 +172,12 @@ export class ConfigurationBaseComponent implements OnInit {
     
     this.iConfig.status['user'].success = null;
     this.iConfig.status['user'].error = null;
+    this.iConfig.status['dynatrace-entities'].success = null;
+    this.iConfig.status['dynatrace-entities'].error = null;
     this.iConfig.status['filter'].success = null;
     this.iConfig.status['filter'].error = null;
     this.iConfig.status['filters'].success = null;
     this.iConfig.status['filters'].error = null;
-    this.iConfig.status['dynatrace'].success = null;
-    this.iConfig.status['dynatrace'].error = null;
     this.iConfig.status['slack'].success = null;
     this.iConfig.status['slack'].error = null;
     this.iConfig.status['ymonitor'].success = null;
@@ -175,6 +231,18 @@ export class ConfigurationBaseComponent implements OnInit {
       .then(response => {
         this.iConfig.values.notifications.uri = response.uri;
         this.iConfig.values.notifications.config = response.config;
+         return this.iConfig.getDynatraceApplications();
+      })
+      .then(response => {
+        this.iConfig.values.applications = response.applications;
+        return this.iConfig.getDynatraceServices();
+      })
+      .then(response => {
+        this.iConfig.values.services = response.services;
+        return this.iConfig.getDynatraceAliases();
+      })
+      .then(response => {
+        this.iConfig.values.aliases = response;
         return this.iConfig.getDynatrace();
       })
       

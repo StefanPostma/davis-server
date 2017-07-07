@@ -208,7 +208,7 @@ gulp.task('publish', (cb) => {
     cb);
 });
 
-gulp.task('release-minor', (cb) => {
+gulp.task('release-dev-patch', (cb) => {
   if (!process.env.GITHUB_TOKEN) throw new Error('must set GITHUB_TOKEN env variable');
   runSequence(
     'clean',
@@ -219,6 +219,27 @@ gulp.task('release-minor', (cb) => {
     'npmupdate',
     'test',
     'bump-version',
+    'changelog',
+    'commit',
+    'push',
+    'github-release',
+    'checkout-dev',
+    'merge-master',
+    'push',
+    cb);
+});
+
+gulp.task('release-minor', (cb) => {
+  if (!process.env.GITHUB_TOKEN) throw new Error('must set GITHUB_TOKEN env variable');
+  runSequence(
+    'clean',
+    'checkout-master',
+    'pull',
+    'merge-dev',
+    'npminstall',
+    'npmupdate',
+    'test',
+    'patch-version',
     'changelog',
     'commit',
     'push',

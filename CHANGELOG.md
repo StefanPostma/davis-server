@@ -1,3 +1,171 @@
+<a name="0.19.0"></a>
+# [0.19.0](https://github.com/Dynatrace/davis-server/compare/v0.18.0...v0.19.0) (2017-06-22)
+
+
+
+<a name="0.18.0"></a>
+# [0.18.0](https://github.com/Dynatrace/davis-server/compare/v0.17.5...v0.18.0) (2017-06-21)
+
+
+
+<a name="0.17.5"></a>
+## [0.17.5](https://github.com/Dynatrace/davis-server/compare/v0.17.4...v0.17.5) (2017-06-06)
+
+
+
+<a name="0.17.4"></a>
+## [0.17.4](https://github.com/Dynatrace/davis-server/compare/v0.17.3...v0.17.4) (2017-06-06)
+
+
+
+<a name="0.17.2"></a>
+## [0.17.2](https://github.com/Dynatrace/davis-server/compare/v0.17.1...v0.17.2) (2017-05-26)
+
+
+
+<a name="0.17.1"></a>
+## [0.17.1](https://github.com/Dynatrace/davis-server/compare/v0.17.0...v0.17.1) (2017-05-19)
+
+
+
+<a name="0.17.0"></a>
+# [0.17.0](https://github.com/Dynatrace/davis-server/compare/v0.16.1...v0.17.0) (2017-05-08)
+
+
+### Features
+
+* Added additional launch phrases to Slack ([f6e8be6](https://github.com/Dynatrace/davis-server/commit/f6e8be6))
+
+
+
+<a name="0.16.1"></a>
+## [0.16.1](https://github.com/Dynatrace/davis-server/compare/v0.16.0...v0.16.1) (2017-04-28)
+
+
+
+<a name="0.16.0"></a>
+# [0.16.0](https://github.com/Dynatrace/davis-server/compare/v0.15.1...v0.16.0) (2017-04-26)
+
+
+### Bug Fixes
+
+* Affected application and service counts ([f01605a](https://github.com/Dynatrace/davis-server/commit/f01605a)), closes [#273](https://github.com/Dynatrace/davis-server/issues/273)
+
+
+### Features
+
+* Added support for multiple tenant tokens ([7ba8e79](https://github.com/Dynatrace/davis-server/commit/7ba8e79))
+* Less verbose launch message ([8aa4858](https://github.com/Dynatrace/davis-server/commit/8aa4858))
+
+
+
+<a name="0.15.1"></a>
+## [0.15.1](https://github.com/Dynatrace/davis-server/compare/v0.15.0...v0.15.1) (2017-04-21)
+
+
+### Bug Fixes
+
+* Catch me up phrase collision ([a39fbdd](https://github.com/Dynatrace/davis-server/commit/a39fbdd))
+
+
+
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/Dynatrace/davis-server/compare/v0.14.0...v0.15.0) (2017-04-21)
+
+
+### Bug Fixes
+
+* Const reassignment in user activity ([fb0bdd5](https://github.com/Dynatrace/davis-server/commit/fb0bdd5))
+* Removed sythentic applications from count ([c50b164](https://github.com/Dynatrace/davis-server/commit/c50b164))
+
+
+
+<a name="0.14.0"></a>
+# [0.14.0](https://github.com/Dynatrace/davis-server/compare/v0.13.0...v0.14.0) (2017-04-19)
+
+
+### Bug Fixes
+
+* Corrected the infrastructure entities endpoint ([1470361](https://github.com/Dynatrace/davis-server/commit/1470361))
+
+
+### Features
+
+* Added more content to voice navigation mode ([e2e589d](https://github.com/Dynatrace/davis-server/commit/e2e589d))
+
+
+
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/Dynatrace/davis-server/compare/v0.12.0...v0.13.0) (2017-04-17)
+
+
+### Features
+
+* add a comment to a problem ([6b925f2](https://github.com/Dynatrace/davis-server/commit/6b925f2))
+* Add catch up functionality ([823a959](https://github.com/Dynatrace/davis-server/commit/823a959))
+* User activity prediction for next half hour [#269](https://github.com/Dynatrace/davis-server/issues/269) ([dcee360](https://github.com/Dynatrace/davis-server/commit/dcee360))
+
+
+
+<a name="0.12.0"></a>
+# [0.12.0](https://github.com/Dynatrace/davis-server/compare/v0.11.1...v0.12.0) (2017-04-06)
+
+
+### Bug Fixes
+
+* Remove sessionStorage items when isWizard is true in Angular guards ([69b9316](https://github.com/Dynatrace/davis-server/commit/69b9316))
+
+
+### Features
+
+* Add push notification support to web UI and Chrome extension [#182](https://github.com/Dynatrace/davis-server/issues/182). 
+* Add support for message history in web ui [#161](https://github.com/Dynatrace/davis-server/issues/161) ([44aace4](https://github.com/Dynatrace/davis-server/commit/44aace4))
+* Added a cancel intent ([4fb91c2](https://github.com/Dynatrace/davis-server/commit/4fb91c2))
+* Create Open Dynatrace plugin [#245](https://github.com/Dynatrace/davis-server/issues/245) ([b270c61](https://github.com/Dynatrace/davis-server/commit/b270c61))
+* Image support in web UI cards [#238](https://github.com/Dynatrace/davis-server/issues/238) ([d986c65](https://github.com/Dynatrace/davis-server/commit/d986c65))
+* webChecks plugin [#248](https://github.com/Dynatrace/davis-server/issues/248) ([31622d9](https://github.com/Dynatrace/davis-server/commit/31622d9))
+* x-router-token authentication ([66229fb](https://github.com/Dynatrace/davis-server/commit/66229fb))
+
+
+
+<a name="0.11.1"></a>
+## [0.11.1](https://github.com/Dynatrace/davis-server/compare/v0.11.0...v0.11.1) (2017-03-06)
+
+
+### Bug Fixes
+
+* [#247](https://github.com/Dynatrace/davis-server/issues/247) Multiple RTM connections ([63bb8c6](https://github.com/Dynatrace/davis-server/commit/63bb8c6))
+* Drop index on empty DB error ([ffb0b86](https://github.com/Dynatrace/davis-server/commit/ffb0b86))
+
+
+
+<a name="0.11.0"></a>
+# [0.11.0](https://github.com/Dynatrace/davis-server/compare/v0.10.0...v0.11.0) (2017-02-28)
+
+
+### Bug Fixes
+
+* [#213](https://github.com/Dynatrace/davis-server/issues/213) continue retry after RTM close ([5479482](https://github.com/Dynatrace/davis-server/commit/5479482))
+* chrome token generated on every user creation instead of server start ([91f0594](https://github.com/Dynatrace/davis-server/commit/91f0594))
+* failed socket authentication should disconnect socket ([dc7a7d4](https://github.com/Dynatrace/davis-server/commit/dc7a7d4))
+* generate chromeToken if it does not exist on auth ([e74264f](https://github.com/Dynatrace/davis-server/commit/e74264f))
+* Handles server lost errors ([c276879](https://github.com/Dynatrace/davis-server/commit/c276879)), closes [#230](https://github.com/Dynatrace/davis-server/issues/230)
+* Non admin users can access admin only sections of configuration in special case [#228](https://github.com/Dynatrace/davis-server/issues/228) ([7965d5d](https://github.com/Dynatrace/davis-server/commit/7965d5d))
+* Web UI configuration inputs get populated with wrong values in Safari [#211](https://github.com/Dynatrace/davis-server/issues/211) ([d7ea727](https://github.com/Dynatrace/davis-server/commit/d7ea727))
+
+
+### Features
+
+* Add Global Exception Handler [#221](https://github.com/Dynatrace/davis-server/issues/221). fix: Davis web throws an exception if the JWT token has expired. [#218](https://github.com/Dynatrace/davis-server/issues/218) ([c02adc6](https://github.com/Dynatrace/davis-server/commit/c02adc6))
+* Add Global Exception Handler. Added dtrum support [#221](https://github.com/Dynatrace/davis-server/issues/221) ([3fe61bd](https://github.com/Dynatrace/davis-server/commit/3fe61bd))
+* Add tags input to filter config. Still need save/edit support [#181](https://github.com/Dynatrace/davis-server/issues/181) ([e906357](https://github.com/Dynatrace/davis-server/commit/e906357))
+* Allow web UI cards to be updated instead of added when flipping through pages [#227](https://github.com/Dynatrace/davis-server/issues/227) ([a8f766b](https://github.com/Dynatrace/davis-server/commit/a8f766b))
+* Instead of using setTimeout for determining when to scroll (web UI), use lifecycle hook for card being added [#207](https://github.com/Dynatrace/davis-server/issues/207). Add scroll to bottom button [#209](https://github.com/Dynatrace/davis-server/issues/209) ([29f3cfe](https://github.com/Dynatrace/davis-server/commit/29f3cfe))
+* Rename Notification Filters to Notification Rules [#229](https://github.com/Dynatrace/davis-server/issues/229) ([8164976](https://github.com/Dynatrace/davis-server/commit/8164976))
+* Timezone Improvements [#222](https://github.com/Dynatrace/davis-server/issues/222) ([7075d87](https://github.com/Dynatrace/davis-server/commit/7075d87))
+
+
+
 <a name="0.10.0"></a>
 # [0.10.0](https://github.com/Dynatrace/davis-server/compare/v0.9.0...v0.10.0) (2017-02-03)
 

@@ -3,7 +3,7 @@
 2. Please fill out the entire template so we can help you in the best way possible.
 -->
 
-# This is a (Bug Report|Feature Proposal)
+# This is a (Bug Report|Feature Proposal|Enhancement)
 
 ## Description
 

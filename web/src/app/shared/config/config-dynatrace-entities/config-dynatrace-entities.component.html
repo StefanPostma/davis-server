@@ -1,0 +1,141 @@
+<form (keydown.enter)="$event.preventDefault()" (ngSubmit)="doSubmit()" #form="ngForm">
+<div class="layout is-flex has-islands">
+  <div class="island--full-width island--full-width-sidebar">
+    <div class="config-title">
+      {{ category }}
+    </div>
+    <a href="https://github.com/Dynatrace/davis-server/wiki/Entity-Aliases" target="_blank" class="config-help">
+      {{ iConfig.helpLinkText }}
+    </a>
+  </div>
+  <div *ngIf="iConfig.status['dynatrace-entities'].success === false" 
+    class="island--full-width island--error island--error-container island--full-width-sidebar"
+    style="margin: 12px 0px; padding: 16px; max-width: 600px">
+    <div class="island--error-text">
+      {{ iConfig.status['dynatrace-entities'].error }}
+    </div>
+    <div class="island--error-button">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" 
+        class="icon icon--black icon--error-button" 
+        (click)="iConfig.status['dynatrace-entities'].success = null;">
+        <use xlink:href="#clear"></use>
+      </svg>
+    </div>
+  </div>
+  <div *ngIf="!editEntity" class="island--full-width island--full-width-sidebar island--center island--left" style="max-width: 1023px">     
+    <div class="input-button-wrapper" [class.input-button-wrapper-focus]="isFilterFocused" style="margin-top: -5px; margin-bottom: 15px">
+      <input #filter type="text" id="filter" name="filter" autocomplete="off"
+        class="users-table-filter-input input-button-input"
+        placeholder="Filter by name or ID"
+        (keyup)="updateFilter(filter)"
+        (focus)="isFilterFocused = true"
+        (blur)="isFilterFocused = false">
+      <div id="clearBtn" class="input-button-button" *ngIf="filter && filter.value.length > 0" (click)="filter.value = '';filterText = ''">
+        <svg class="icon icon--black icon--input-button-img" [class.input-button-img-password-masked]="!isFilterFocused">
+          <use xlink:href="#clear"></use>
+        </svg>
+      </div>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="entity-name-column">Name</th>
+          <th class="entity-id-column">ID</th>
+          <th class="entity-edited-column">Edited</th>
+        </tr>
+      </thead>
+    </table>
+    <div style="visibility: hidden; width: 100%" [style.height]="table.offsetHeight + 'px'" 
+      [style.minHeight]="((filters | filterFiltersByName:{str: filterName, origin: 'QUESTION'}).length < 1) ? null : '350px'">
+    </div>
+    <div #table class="island--scrollable-table" 
+      [style.maxHeight]="(iDavis.getWindowHeight() - 410) + 'px'"
+      (window:resize)="table.style.maxHeight = (iDavis.getWindowHeight() - 410) + 'px'">
+      <table class="table entities">
+        <tbody>
+          <tr *ngFor="let entity of iConfig.values.entities[category.toLowerCase()] | filterDynatraceEntities:filterText" (click)="editMode(entity)">
+            <td class="entity-name-column">
+              {{ entity.name }}
+            </td>
+            <td class="entity-id-column">
+              {{ entity.entityId }}
+            </td>
+            <td class="entity-edited-column">
+              <span *ngIf="entity.name !== entity.display.audible 
+                || entity.name !== entity.display.visual 
+                || entity.aliases.length > 0" style="margin-left: calc(50% - 6px);">
+                &#x2713;
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 *ngIf="!iConfig.values.entities[category.toLowerCase()] || (iConfig.values.entities[category.toLowerCase()] | filterDynatraceEntities:filterText).length < 1" style="text-align: center; opacity: 0.2">None</h3>
+  </div>
+  <div *ngIf="editEntity"class="island--full-width island--full-width-sidebar">
+    <svg class="icon--back" style="float: left; margin-top: 20px; margin-left: 0" (click)="editEntity = false">
+      <use xlink:href="#back"></use>
+    </svg>
+    <div class="entity-title">
+      <div style="font-size: 20px; word-wrap: break-word">
+        <a [href]="iConfig.values.dynatrace.url + ((iConfig.values.entity.category === 'applications') ? '/#uemapplications/uemappmetrics;uemapplicationId=' : '/#serviceOverview;id=') + iConfig.values.entity.entityId" target="_blank">{{ iConfig.values.entity.name }}</a>
+      </div>
+      <div style="font-size: 12px; word-wrap: break-word">
+        {{ iConfig.values.entity.entityId }}
+      </div>
+    </div>
+    <div class="layout is-flex has-islands island--half island--center island--left" style="clear: both">
+      <div class="layout__container layout--half">
+        <div class="island island--half island--half--left">
+          <label for="visual" class="label">
+            Show
+          </label>
+          <input type="text" name="visual" autocomplete="off"
+            class="inputfield" id="visual"
+            [(ngModel)]="iConfig.values.entity.display.visual" 
+            (keyup)="validate()" required>
+          <p class="hint" style="margin-bottom: 0" id="i9">Used in Slack App and Web UI responses</p>
+        </div>
+      </div>
+      <div class="layout__container layout--half">
+        <div class="island island--half island--half--right">
+          <label for="audible" class="label">
+            Say
+          </label>
+          <input type="text" name="audible" autocomplete="off"
+            class="inputfield" id="audible"
+            [(ngModel)]="iConfig.values.entity.display.audible" 
+            (keyup)="validate()" required>
+          <p class="hint" style="margin-bottom: 0" id="i9">Used in Amazon Echo responses,<br>
+            <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference" target="_blank" style="cursor: pointer">
+              SSML tags</a> are supported
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="island island--center island--left">
+      <label for="source" class="label">
+        Aliases
+      </label>
+      <tags-generic-input [tags]="iConfig.values.entity.aliases" (tagsChange)="validate()"></tags-generic-input>
+      <p class="hint" style="margin-bottom: 0" id="i9">Used to help match {{ category.toLowerCase().slice(0, -1) }} name in requests</p>
+    </div>
+    <div class="island island--center island--submit island--left">
+      <button *ngIf="iConfig.values.entity.name !== iConfig.values.entity.display.audible 
+                || iConfig.values.entity.name !== iConfig.values.entity.display.visual 
+                || (iConfig.values.entity.aliases.length > 0 && iConfig.values.entity.aliases[0].trim().length > 0)"
+          type="button" class="btn btn--secondary btn--secondary--delete"
+          (click)="iConfig.values.entity.display.audible = iConfig.values.entity.name;
+            iConfig.values.entity.display.visual = iConfig.values.entity.name;
+            (iConfig.values.entity.aliases.length > 0) ? iConfig.values.entity.aliases.splice(0, iConfig.values.entity.aliases.length) && validate() : null">
+          Reset
+      </button>
+      <button type="submit" role="button" class="btn btn--primary btn--submit"
+          [attr.disabled]="(!form.valid || submitButton === 'Saving...' || !isDirty) ? true : null">
+          {{ submitButton }}
+      </button>
+    </div>
+  </div>
+</div>
+</form>

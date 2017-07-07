@@ -20,6 +20,7 @@ describe('TextHelpers', () => {
     th.problemTitle({
       status: 'OPEN',
       impactLevel: 'INFRASTRUCTURE',
-    }).should.eql('Open Infrastructure Level Problem');
+      displayName: 123,
+    }).should.eql('Open Infrastructure Level Problem (123)');
   });
 });

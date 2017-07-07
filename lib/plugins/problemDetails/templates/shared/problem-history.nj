@@ -1,8 +1,0 @@
-{%- set startingEvent = problem.rankedEvents | last -%}
-{%- set currentEvent = problem.rankedEvents | first -%}
-{% if lastProblem %}
-Your most recent problem
-{% else %}
-This problem
-{% endif %}
-started {{ problem.startTime | friendlyTime(user) }} when {{ startingEvent.eventType | friendlyEvent }} started {{ ['impacting', 'affecting']|random }} {{ startingEvent |  friendlyEntityName() }}.{% if problem.rankedEvents.length > 1 %}  Eventually, {{ currentEvent |  friendlyEntityName() }} experienced {{ startingEvent.eventType | friendlyEvent }} {{ currentEvent.startTime | friendlyTime(user) }}.{% endif %}  {% include "lib/plugins/problemDetails/templates/shared/recommendation.nj" %}

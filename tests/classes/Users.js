@@ -25,7 +25,7 @@ describe('Users', () => {
     () => users.getValidTimezones().should.contain('America/Detroit'));
 
   it('should not find a valid Alexa user',
-    () => users.validateAlexaUser('shouldNotExist').should.eventually.be.rejected);
+    () => users.validateAlexaUser({ headers: {}, body: { session: { user: { userId: 'shouldNotExist' } } } }).should.eventually.be.rejected);
 
   it('should find a valid Alexa user', () => {
     const alexaID = 'shouldExist';
@@ -33,7 +33,7 @@ describe('Users', () => {
     return davis.config.load()
       .then(() => users.createUser( { email, password: 'supersecret', name: { first: 'admin', last: 'user' }, admin: true }))
       .then(() => users.updateUser(email, { alexa_ids: [alexaID] }))
-      .then(() => users.validateAlexaUser(alexaID))
+      .then(() => users.validateAlexaUser({ headers: {}, body: { session: { user: { userId: alexaID } } } }))
       .then(user => (user.email).should.equal(email));
   });
 
