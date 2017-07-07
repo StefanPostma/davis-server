@@ -14,7 +14,7 @@
   "scripts": {
     "predev": "gulp compile:dev",
     "dev": "node ./bin/davis-server",
-    "start": "node ./bin/davis-server",
+    "start": "npm install && node ./bin/davis-server",
     "test": "istanbul cover node_modules/mocha/bin/_mocha tests/all -- -R spec --recursive --timeout 10000",
     "debug-test": "mocha tests/all --debug-brk",
     "lint": "eslint lib && echo",
@@ -130,7 +130,8 @@
     "request-promise": "^4.1.1",
     "serve-favicon": "^2.3.2",
     "socket.io": "^1.7.1",
-    "string": "^3.3.3"
+    "string": "^3.3.3",
+    "xml2js": "^0.4.17"
   },
   "files": [
     "lib",
