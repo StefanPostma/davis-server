@@ -12,14 +12,11 @@
     "node": ">= 6.0.0"
   },
   "scripts": {
-    "predev": "gulp compile:dev",
-    "dev": "node ./bin/davis-server",
-    "start": "npm install && node ./bin/davis-server",
+    "start": "npm install &&  node ./index.js",
     "test": "istanbul cover node_modules/mocha/bin/_mocha tests/all -- -R spec --recursive --timeout 10000",
     "debug-test": "mocha tests/all --debug-brk",
     "lint": "eslint lib && echo",
     "jsdoc": "jsdoc -r lib",
-    "heroku-postbuild": "gulp --gulpfile heroku.gulpfile.js get-dist",
     "precompile:watch": "gulp clean",
     "compile:watch": "webpack --watch --display-error-details --progress"
   },
